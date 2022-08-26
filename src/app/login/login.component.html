@@ -1,18 +1,24 @@
 <mat-toolbar>
     <mat-toolbar-row>
-        <button mat-icon-button [matMenuTriggerFor]="loginMenu">
+        <mat-button mat-icon-button [matMenuTriggerFor]="loginMenu">
             <mat-icon>menu</mat-icon>
-        </button>
+        </mat-button>
         <mat-menu #loginMenu="matMenu">
             <button mat-menu-item (click)="login()">
                 <span>Login</span>
+            </button>
+            <button mat-menu-item (click)="testLogin()">
+                <span>LoginTest</span>
+            </button>
+            <button mat-menu-item (click)="register()">
+                <span>Register</span>
             </button>
             <button mat-menu-item *ngIf="loginStatus" (click)="logout()">
                 <span>Logout</span>
             </button>
         </mat-menu>
         
-        <span>MorrisWA GPA Application v1.2.1</span>
+        <span>MorrisWA Task App</span>
         
     </mat-toolbar-row>
 </mat-toolbar>

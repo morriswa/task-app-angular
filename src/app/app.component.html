@@ -1,2 +1,2 @@
 <app-login></app-login>
-<app-tasks *ngIf="login"></app-tasks>
+<app-planner *ngIf="(isLoggedIn$ | async)"></app-planner>

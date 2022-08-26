@@ -1,0 +1,58 @@
+<!-- <div *ngIf="(message$ | async) as message">
+    <p>{{ message }}</p>
+</div> -->
+
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let planner of planners$">
+        <mat-expansion-panel-header>{{ planner.name }}</mat-expansion-panel-header>
+        <h1>{{ planner.name }}</h1>
+        <h2 *ngIf="(planner.goal || '').length!=0">Planner Goal -> {{ planner.goal }}</h2>
+        <div *ngIf="toDateObj(planner.startDate) as startdate">
+            <h2 *ngIf="planner.startDate != undefined">Start date -> {{ startdate.toDateString() }}</h2>
+        </div>
+        <div *ngIf="toDateObj(planner.finishDate) as finishdate">
+            <h2 *ngIf="planner.finishDate != undefined">Finish date -> {{ finishdate.toDateString() }}</h2>
+        </div>
+
+        <app-task [PLANNER_ID]="planner.id" [EMAIL]="this.email"></app-task>
+
+        <mat-action-row>    
+            <button (click)="deletePlanner(planner.id)">Del</button>
+        </mat-action-row>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>Add Planner</mat-expansion-panel-header>
+    
+        <form [formGroup]="plannerFormField">
+            <mat-form-field appearance="outline">
+                <mat-label>Planner Name</mat-label>
+                <input matInput type="text" name="planner-name" formControlName="planner-name" required="true">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Goal</mat-label>
+                <input matInput type="text" name="planner-goal" formControlName="planner-goal">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [matDatepicker]="startDatePicker" name="planner-start-date" formControlName="planner-start-date">
+                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-label>Planner Start Date</mat-label>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [matDatepicker]="endDatePicker" name="planner-end-date" formControlName="planner-end-date">
+                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-label>Planner End Date</mat-label>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+            </mat-form-field>
+        
+            <!-- <mat-action-row>
+                <button mat-raised-button color="primary" (click)="this.newPlannerRequest()">Save Changes</button>
+            </mat-action-row> -->
+        </form>
+    
+        <mat-action-row>
+            <button mat-raised-button (click)="newPlannerRequest()">New Planner</button>`
+        </mat-action-row>
+    </mat-expansion-panel>    
+</mat-accordion>

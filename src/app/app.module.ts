@@ -4,22 +4,36 @@ import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { AppComponent } from './app.component';
-import { MatCommonModule } from '@angular/material/core';
+import { MatCommonModule, MatNativeDateModule } from '@angular/material/core';
 import {MatToolbarModule} from '@angular/material/toolbar'
 import {MatMenuModule} from '@angular/material/menu'
 import {MatIconModule} from '@angular/material/icon'
 import {MatButtonModule} from '@angular/material/button'
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input'
 import { environment as env } from 'src/environments/environment';
 import { LoginComponent } from './login/login.component';
-import { TasksComponent } from './tasks/tasks.component';
+import { PlannerComponent } from './planner/planner.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { TaskComponent } from './task/task.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    
-    TasksComponent
+    PlannerComponent,
+    TaskComponent 
   ],
   imports: [
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatExpansionModule,
     BrowserModule,
     BrowserAnimationsModule,
     MatCommonModule,

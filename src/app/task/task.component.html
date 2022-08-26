@@ -1,0 +1,23 @@
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let task of tasks$">
+        <mat-expansion-panel-header>{{ task.title }}</mat-expansion-panel-header>
+
+        <mat-action-row>    
+            <button (click)="deleteTask(task.id)">Del</button>
+        </mat-action-row>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>Add Task</mat-expansion-panel-header>
+
+        <form [formGroup]="taskForm">
+            <mat-form-field appearance="outline">
+                <mat-label>Task Name</mat-label>
+                <input matInput type="text" name="task-name" formControlName="task-name" required="true">
+            </mat-form-field>
+        </form>
+        <mat-action-row>
+            <button mat-raised-button (click)="addTaskRequest()">New Task</button>
+        </mat-action-row>
+    </mat-expansion-panel>
+</mat-accordion>

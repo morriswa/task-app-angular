@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +9,12 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class AppComponent implements OnInit {
   title = 'task-app-angular';
-  login: boolean = false;
+  isLoggedIn$!: Observable<boolean>;
 
   constructor(private auth0: AuthService) {}
 
   ngOnInit() {
-    this.auth0.isAuthenticated$.subscribe(obs => {
-      this.login = obs;
-    })
+    this.isLoggedIn$ = this.auth0.isAuthenticated$;
   }
 
   
