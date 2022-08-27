@@ -14,10 +14,10 @@
             <h2 *ngIf="planner.finishDate != undefined">Finish date -> {{ finishdate.toDateString() }}</h2>
         </div>
 
-        <app-task [PLANNER_ID]="planner.id" [EMAIL]="this.email"></app-task>
+        <app-task [PLANNER_ID]="planner.id" [EMAIL]="this.EMAIL"></app-task>
 
         <mat-action-row>    
-            <button (click)="deletePlanner(planner.id)">Del</button>
+            <button mat-raised-button (click)="deletePlanner(planner.id)">Delete {{ planner.name }}</button>
         </mat-action-row>
     </mat-expansion-panel>
 

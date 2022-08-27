@@ -6,6 +6,7 @@ import { AuthService, User } from '@auth0/auth0-angular';
 import { Observable, of, subscribeOn } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Planner } from '../interface/planner';
+import { CustomRequest } from '../interface/request';
 import { UserProfile } from '../interface/user-profile';
 
 @Component({
@@ -15,13 +16,13 @@ import { UserProfile } from '../interface/user-profile';
 })
 export class PlannerComponent implements OnInit,OnDestroy {
 
-  public email:string="";
+  public EMAIL:string="";
   public planners$:Planner[]=[];
 
   public plannerFormField:FormGroup;
   constructor(private auth0: AuthService,private http: HttpClient,private fb:FormBuilder) {
     auth0.getUser().subscribe({
-      next : (user) => this.email = user?.email!
+      next : (user) => this.EMAIL = user?.email!
     })
     this.getEmail()
 
@@ -41,19 +42,19 @@ export class PlannerComponent implements OnInit,OnDestroy {
   getPlanners() {
     this.http.get<Planner[]>(environment.api + "planner/all",{
       headers : {
-        "email" : this.email
+        "email" : this.EMAIL
       }
     }).subscribe({
       next : obs => this.planners$ = Object.assign(new Array<Planner>(), obs), 
       error : err => {
         this.http.post(environment.api + "login/register",{},{
           headers: {
-            "email" : this.email
+            "email" : this.EMAIL
           }
         }).subscribe(obs => {
           console.log(obs);
         });
-        this.getPlanners();
+        setTimeout(() => this.getPlanners(),2000)
       }
     })
   }
@@ -63,7 +64,7 @@ export class PlannerComponent implements OnInit,OnDestroy {
 
   getEmail(): void {
     this.auth0.user$.subscribe({
-      next : (user) => this.email = user?.email!,
+      next : (user) => this.EMAIL = user?.email!,
       error : (err) => console.error(err)
     });
   }
@@ -74,23 +75,13 @@ export class PlannerComponent implements OnInit,OnDestroy {
     let PLANNER_START: Date | null = this.plannerFormField.get("planner-start-date")?.value;
     let PLANNER_FINISH: Date | null = this.plannerFormField.get("planner-end-date")?.value;
 
-    let request: {
-      "planner-name"? : string,
-      "planner-goal"? : string,
-      "start-year"? : number, 
-      "start-month"? : number, 
-      "start-day"?: number,
-      "finish-year"? : number, 
-      "finish-month"? : number, 
-      "finish-day"?: number
-    } = {};
+    let request: CustomRequest = {};
     
+    request['planner-name'] = PLANNER_NAME
+
     if (PLANNER_GOAL.length > 0) {
-      request['planner-name'] = PLANNER_NAME,
       request['planner-goal'] = PLANNER_GOAL
-    } else {
-      request['planner-name'] = PLANNER_NAME
-    }
+    } 
 
     if (PLANNER_START != null) {
       request['start-year'] = PLANNER_START.getFullYear();
@@ -106,7 +97,7 @@ export class PlannerComponent implements OnInit,OnDestroy {
 
     this.http.post<Planner[]>(environment.api + "planner/add",request,{
       headers : {
-        "email" : this.email
+        "email" : this.EMAIL
       }
     }).subscribe({
       next: (planners) => this.planners$ = Object.assign(new Array<Planner>(),planners),
@@ -117,7 +108,7 @@ export class PlannerComponent implements OnInit,OnDestroy {
   deletePlanner(plannerIdToDel:number) {
     this.http.delete<Planner[]>(environment.api + "planner/del",{
       headers : {
-        "email" : this.email
+        "email" : this.EMAIL
       }, body : {
         "planner-id" : plannerIdToDel
       }
@@ -130,4 +121,5 @@ export class PlannerComponent implements OnInit,OnDestroy {
   toDateObj(date:Date): Date {
     return new Date(date);
   }
+  
 }

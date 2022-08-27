@@ -1,9 +1,19 @@
 <mat-accordion>
     <mat-expansion-panel *ngFor="let task of tasks$">
-        <mat-expansion-panel-header>{{ task.title }}</mat-expansion-panel-header>
+        <mat-expansion-panel-header>
+            <mat-panel-title *ngIf="task.category.length === 0">{{ task.title }}</mat-panel-title>
+            <mat-panel-title *ngIf="task.category.length != 0">{{ task.category + " :: " + task.title }}</mat-panel-title>
+            <mat-panel-description>{{ task.description }}</mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <h2 *ngIf="task.status.length > 0">Status -> {{ task.status }}</h2>
+        <h2 *ngIf="task.startDate != undefined">Start date -> {{ toDateObj(task.startDate).toDateString() }}</h2>
+        <h2 *ngIf="task.dueDate != undefined">Due date -> {{ toDateObj(task.dueDate).toDateString() }}</h2>
+        <h2 *ngIf="task.completedDate != undefined">Date completed -> {{ toDateObj(task.completedDate).toDateString() }}</h2>
+
 
         <mat-action-row>    
-            <button (click)="deleteTask(task.id)">Del</button>
+            <button mat-button (click)="deleteTask(task.id)">Delete</button>
         </mat-action-row>
     </mat-expansion-panel>
 
@@ -15,6 +25,64 @@
                 <mat-label>Task Name</mat-label>
                 <input matInput type="text" name="task-name" formControlName="task-name" required="true">
             </mat-form-field>
+
+            <mat-divider></mat-divider>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Category</mat-label>
+                <input matInput type="text" name="task-category" formControlName="task-category">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Details</mat-label>
+                <input matInput type="text" name="task-details" formControlName="task-details">
+            </mat-form-field>
+
+            <mat-divider></mat-divider>
+            
+            <mat-form-field appearance="outline">
+                <mat-label>Status</mat-label>
+                <mat-select matNativeControl formControlName="task-status">
+                    <mat-option value="BACKLOG">Backlog</mat-option>
+                    <mat-option value="NEW">New</mat-option>
+                    <mat-option value="STARTED">Started</mat-option>
+                    <mat-option value="IN_PROGRESS">In Progress</mat-option>
+                    <mat-option value="PAST_DUE">Overdue</mat-option>
+                    <mat-option value="REVIEW">Review</mat-option>
+                    <mat-option value="COMPLETED">Complete</mat-option>
+                    <mat-option value="TURNED_IN">Submitted</mat-option>
+                    <mat-option value="CLOSED">Closed</mat-option>
+                    <mat-option value="EXPIRED">Expired</mat-option>
+                </mat-select>
+            </mat-form-field> 
+            <mat-form-field appearance="outline">
+                <mat-label>Type</mat-label>
+                <mat-select matNativeControl formControlName="task-type">
+                    <mat-option value="TASK">Task</mat-option>
+                    <mat-option value="ASSIGNMENT">Assignment</mat-option>
+                    <mat-option value="QUIZ">Quiz</mat-option>
+                    <mat-option value="TEST">Test</mat-option>
+                    <mat-option value="GRADED_ASSIGNMENT">Graded Assignment</mat-option>
+                    <mat-option value="PROJECT">Project</mat-option>
+                    <mat-option value="TASK_HOME_QUIZ">Take Home Quiz</mat-option>
+                    <mat-option value="TASK_HOME_TEST">Take Home Test</mat-option>
+                </mat-select>
+            </mat-form-field> 
+        
+            <mat-divider></mat-divider>
+
+            <mat-form-field>
+                <input matInput [matDatepicker]="startDatePicker" name="task-start-date" formControlName="task-start-date">
+                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-label>Task Start Date</mat-label>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput [matDatepicker]="endDatePicker" name="task-due-date" formControlName="task-due-date">
+                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-label>Due Date</mat-label>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+            </mat-form-field>
+
         </form>
         <mat-action-row>
             <button mat-raised-button (click)="addTaskRequest()">New Task</button>

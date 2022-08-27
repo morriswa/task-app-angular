@@ -18,6 +18,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { TaskComponent } from './task/task.component';
+import {MatSelectModule} from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -28,6 +30,8 @@ import { TaskComponent } from './task/task.component';
     TaskComponent 
   ],
   imports: [
+    MatSelectModule,
+    MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
