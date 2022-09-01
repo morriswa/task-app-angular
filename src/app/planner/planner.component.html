@@ -3,6 +3,9 @@
 </div> -->
 
 <mat-accordion>
+    <mat-spinner *ngIf="!LOADED_SUCCESSFULLY"></mat-spinner>
+    
+    <div *ngIf="LOADED_SUCCESSFULLY">
     <mat-expansion-panel *ngFor="let planner of planners$">
         <mat-expansion-panel-header>{{ planner.name }}</mat-expansion-panel-header>
         <h1>{{ planner.name }}</h1>
@@ -55,4 +58,5 @@
             <button mat-raised-button (click)="newPlannerRequest()">New Planner</button>`
         </mat-action-row>
     </mat-expansion-panel>    
+    </div>
 </mat-accordion>

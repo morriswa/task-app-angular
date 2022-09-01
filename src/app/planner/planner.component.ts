@@ -1,9 +1,7 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDatepicker } from '@angular/material/datepicker';
-import { AuthService, User } from '@auth0/auth0-angular';
-import { Observable, of, subscribeOn } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
 import { environment } from 'src/environments/environment';
 import { Planner } from '../interface/planner';
 import { CustomRequest } from '../interface/request';
@@ -14,18 +12,15 @@ import { UserProfile } from '../interface/user-profile';
   templateUrl: './planner.component.html',
   styleUrls: ['./planner.component.css']
 })
-export class PlannerComponent implements OnInit,OnDestroy {
+export class PlannerComponent implements OnInit {
 
+  public LOADED_SUCCESSFULLY:boolean = false;
   public EMAIL:string="";
   public planners$:Planner[]=[];
 
   public plannerFormField:FormGroup;
-  constructor(private auth0: AuthService,private http: HttpClient,private fb:FormBuilder) {
-    auth0.getUser().subscribe({
-      next : (user) => this.EMAIL = user?.email!
-    })
-    this.getEmail()
 
+  constructor(private auth0: AuthService,private http: HttpClient,private fb:FormBuilder) {
     this.plannerFormField = this.fb.group({
       "planner-name" : "",
       "planner-goal" : "",
@@ -39,34 +34,37 @@ export class PlannerComponent implements OnInit,OnDestroy {
     this.getPlanners();
   }
 
+  getEmail(): void {
+    this.auth0.user$.subscribe({
+      next : (user) => this.EMAIL = user?.email!,
+      error : (err) => console.error(err)
+    });
+  }
+
   getPlanners() {
     this.http.get<Planner[]>(environment.api + "planner/all",{
       headers : {
         "email" : this.EMAIL
       }
     }).subscribe({
-      next : obs => this.planners$ = Object.assign(new Array<Planner>(), obs), 
-      error : err => {
-        this.http.post(environment.api + "login/register",{},{
-          headers: {
-            "email" : this.EMAIL
-          }
-        }).subscribe(obs => {
-          console.log(obs);
-        });
-        setTimeout(() => this.getPlanners(),2000)
+      next : obs => {
+        this.planners$ = Object.assign(new Array<Planner>(), obs);
+        if (this.planners$.length > 0) {
+          this.LOADED_SUCCESSFULLY = true;
+        }
+      }, error : err => {
+        this.registerNewUserRequest();
+        setTimeout(() => this.getPlanners(),2000);
       }
     })
   }
 
-  ngOnDestroy(): void {
-  }
-
-  getEmail(): void {
-    this.auth0.user$.subscribe({
-      next : (user) => this.EMAIL = user?.email!,
-      error : (err) => console.error(err)
-    });
+  registerNewUserRequest() {
+    this.http.post(environment.api + "login/register",{},{
+      headers: {
+        "email" : this.EMAIL
+      }
+    }).subscribe(obs => console.log(obs));
   }
   
   newPlannerRequest() {

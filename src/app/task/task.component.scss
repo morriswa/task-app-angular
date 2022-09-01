@@ -1,0 +1,61 @@
+table {
+  width: 100%;
+}
+
+// EXPIRED
+.EXPIRED,.EXPIRED:focus {
+  background-color: rgb(68, 19, 114);
+} .EXPIRED_text {
+  color: rgb(255, 249, 241);
+} .EXPIRED:hover {
+  background-color: rgb(125, 59, 187) !important;
+}
+
+// COMPLETED TURNED IN
+.COMPLETED,.COMPLETED:focus,
+.TURNED_IN,.TURNED_IN:focus {
+  background-color: rgb(30, 121, 22);
+} 
+.COMPLETED_text,
+.TURNED_IN_text {
+  color: rgb(255, 249, 241);
+}
+.COMPLETED:hover,
+.TURNED_IN:hover {
+  background-color: rgb(9, 92, 0) !important;
+}
+ 
+// NEW
+.NEW,.NEW:focus {
+  background-color: rgb(255, 224, 239);
+}
+.NEW_text {
+  color: rgb(55, 55, 55);
+}
+.NEW:hover {
+  background-color: rgb(255, 175, 212) !important;
+}
+
+// IN PROGRESS
+.IN_PROGRESS,
+.IN_PROGRESS:focus {
+  background-color: rgb(255, 221, 134);
+}
+.IN_PROGRESS_text {
+  color: rgb(55, 55, 55);
+}
+.IN_PROGRESS:hover {
+  background-color: rgb(255, 183, 116) !important;
+}
+
+// REVIEW
+.REVIEW,
+.REVIEW:focus {
+  background-color: rgb(155, 238, 255);
+}
+.REVIEW_text {
+  color: rgb(55, 55, 55);
+}
+.REVIEW:hover {
+  background-color: rgb(134, 174, 255) !important;
+}

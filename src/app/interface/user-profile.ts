@@ -1,5 +1,5 @@
 export interface UserProfile {
-    user: Map<String,Object>
+    user: JSON; 
     id: number;
     nameFirst: string;
     nameMiddle: string;

@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.auth0.loginWithRedirect();
+    this.auth0.loginWithPopup();
 
   }
 
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
       } , responseType : "text"
     }).subscribe(obs => {
       console.log(obs)
-    })
+    });
   }
 
   logout() {
@@ -43,12 +43,6 @@ export class LoginComponent implements OnInit {
   }
 
   register() {
-    this.http.post(environment.api + "login/register",{},{
-      headers: {
-        "email" : this.email
-      }
-    }).subscribe(obs => {
-      console.log(obs);
-    })
+    this.auth0.loginWithRedirect();
   }
 }

@@ -4,13 +4,10 @@
             <mat-icon>menu</mat-icon>
         </mat-button>
         <mat-menu #loginMenu="matMenu">
-            <button mat-menu-item (click)="login()">
+            <button mat-menu-item *ngIf="!loginStatus" (click)="login()">
                 <span>Login</span>
             </button>
-            <button mat-menu-item (click)="testLogin()">
-                <span>LoginTest</span>
-            </button>
-            <button mat-menu-item (click)="register()">
+            <button mat-menu-item *ngIf="!loginStatus" (click)="register()">
                 <span>Register</span>
             </button>
             <button mat-menu-item *ngIf="loginStatus" (click)="logout()">
