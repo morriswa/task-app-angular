@@ -67,9 +67,7 @@ export class PlannerComponent implements OnInit {
 
     this.planners$.subscribe({
       next : obs => {
-        if ((obs||[]).length > 0) {
-          this.LOADED_SUCCESSFULLY = true;
-        }
+        this.LOADED_SUCCESSFULLY = true;
       }, error : err => {
         this.registerNewUserRequest();
         setTimeout(() => this.getPlanners(),2000);
