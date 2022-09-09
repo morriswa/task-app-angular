@@ -7,14 +7,11 @@
         
         <mat-expansion-panel-header><h1>{{ planner.name }}</h1></mat-expansion-panel-header>
     
-        <div class="info_panel_style">
-            <!-- <h1>{{ planner.name }}</h1> -->
-
-            <div *ngIf="(planner.goal||[]).length!=0">
-                <h2>My goal for this planner is...</h2>
-                <h3>{{ planner.goal }}</h3>
-            </div>
-        </div>
+        
+        <h2 class="planner_goal" *ngIf="(planner.goal||[]).length!=0">
+            Goal: {{ planner.goal }}
+        </h2>
+ 
             
         <div    class="dates_stylebody"
                 *ngIf="planner.startDate != undefined && planner.finishDate != undefined">
@@ -83,8 +80,8 @@
 
     </mat-expansion-panel>
 
-    <mat-expansion-panel>
-        <mat-expansion-panel-header class="planners_style">Add Planner</mat-expansion-panel-header>
+    <mat-expansion-panel class="planners_stylebody">
+        <mat-expansion-panel-header><h1>Add Planner</h1></mat-expansion-panel-header>
         <form [formGroup]="plannerFormField" >
             <mat-form-field appearance="outline">
                 <mat-label>Planner Name</mat-label>

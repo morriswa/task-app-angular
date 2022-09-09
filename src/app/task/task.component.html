@@ -14,9 +14,19 @@
                 </mat-expansion-panel-header>
 
                 <div class="task_info">
+                    <!-- <h2 id="title">
+                        <p>{{ task.title }}</p>
+                        <p id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</p>
+                    </h2>
+                    <h2 id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2> -->
                     <h2 id="title">{{ task.title }}</h2>
-                    <h2 id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</h2>
-                    <h2 id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2>
+                    
+                    
+                    <h2>
+                        <p id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</p>
+                        <p style="color: rgb(57,57,57);">|</p>
+                        <p id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</p>
+                    </h2>
                 </div>
 
                 <div *ngIf="task.dueDate != undefined" class="task_due">
@@ -124,7 +134,6 @@
             <div *ngFor="let task of (taskobs$ | async)">
             <mat-expansion-panel *ngIf="task.category === tab"
                 class="{{BETA_STATUS_CODES.get(task.status)?.css}}_stylebody">
-                    
                 <mat-expansion-panel-header class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
                     <mat-panel-title>
                         <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}_text">{{ task.title }}</p></mat-panel-title>
@@ -133,9 +142,19 @@
                 </mat-expansion-panel-header>
 
                 <div class="task_info">
+                    <!-- <h2 id="title">
+                        <p>{{ task.title }}</p>
+                        <p id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</p>
+                    </h2>
+                    <h2 id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2> -->
                     <h2 id="title">{{ task.title }}</h2>
-                    <h2 id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</h2>
-                    <h2 id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2>
+                    
+                    
+                    <h2>
+                        <p id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</p>
+                        <p style="color: rgb(57,57,57);">|</p>
+                        <p id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</p>
+                    </h2>
                 </div>
 
                 <div *ngIf="task.dueDate != undefined" class="task_due">
@@ -150,7 +169,7 @@
                     <p>{{ task.description }}</p>
                     <mat-divider></mat-divider>
                 </div>
-        
+                
                 <mat-button-toggle-group aria-label="Edit Mode">
                     <mat-button-toggle (click)="taskEditMode = true">Edit</mat-button-toggle>
                     <mat-button-toggle (click)="taskEditMode = false">Close</mat-button-toggle>

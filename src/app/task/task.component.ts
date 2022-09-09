@@ -150,7 +150,11 @@ export class TaskComponent implements OnInit,AfterViewInit {
       map(obs => {
         let tasks = Array.from(obs);
         let getsetgo = new Set<string>();
-        tasks.forEach(task => {getsetgo.add(task.category)})
+        tasks.forEach(task => {
+          if ((task.category||[]).length > 0) {
+            getsetgo.add(task.category);
+          }
+        })
         return Array.from(getsetgo);
       })
     );

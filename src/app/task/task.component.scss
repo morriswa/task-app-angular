@@ -1,33 +1,41 @@
 $text-dark: rgb(57, 57, 57);
 $text-light: rgb(118, 118, 118);
 $text-nearwhite: rgb(255, 249, 241);
-$font: Roboto, "Helvetica Neue", sans-serif; 
-$font-hand: 'Amatic SC', cursive;
+// $font: Roboto, "Helvetica Neue", sans-serif; 
+$font: 'Montserrat', sans-serif;
+// $font-hand: 'Amatic SC', cursive;
+$font-hand: $font;
 
 table {
   width: 100%;
 }
 
 .task_info {
+  p {
+    display: inline;
+  }
+
   h2{
     color: $text-light;
     font-family: $font-hand;
-    font-size: 3em; 
+    font-size: 1.5rem; 
     text-align: left;
   }
   
   #title {
     color: $text-dark;  
     font-family: $font-hand;
-    font-size: 4em;
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    line-height: 1rem;
+    // overflow:visible;
+    white-space: nowrap;
   }
 
-  #status {
-    margin-left: 10%;
-  }
-
-  #type {
-    margin-left: 20%;
+  #status,#type {
+    color: $text-light;
+    font-size: 1.5rem;
+    padding: .5rem;
   }
 }
 
@@ -35,9 +43,11 @@ table {
   h2 {
     color: $text-dark;
     font-family: $font;
-    font-size: 2em; 
+    font-size: 1.5rem; 
+    margin-top: 2rem;
     text-align: right; 
-    text-decoration: underline;
+    font-weight: 600;
+    // text-decoration: underline;
   }
 }
 
@@ -46,7 +56,7 @@ table {
   p {
     color: $text-dark;
     font-family: $font;
-    font-size: 20px; 
+    font-size: 1rem;
     margin-left: 5%;
     text-align: left; 
   }
@@ -60,7 +70,7 @@ table {
 } .OLD_text {
   color: $text-nearwhite;
   font-family: $font;
-
+  font-weight: 600;
 } .OLD:hover {
   background-color: rgb(125, 59, 187) !important;
 }
@@ -71,8 +81,7 @@ table {
 } .EXPIRED_text {
   color: $text-nearwhite;
   font-family: $font;
-
-
+  font-weight: 600;
 } .EXPIRED:hover {
   background-color: rgb(125, 59, 187) !important;
 }
@@ -87,7 +96,7 @@ table {
 .DONE_text {
   color: $text-nearwhite;
   font-family: $font;
-
+  font-weight: 600;
 }
 .DONE:hover {
   background-color: rgb(48, 132, 39) !important;
@@ -103,6 +112,8 @@ table {
 .STARTED_text {
   color: $text-dark;
   font-family: $font;
+  font-weight: 600;
+
 
 }
 .STARTED:hover {
@@ -121,6 +132,8 @@ table {
 .REVIEW_text {
   color: $text-nearwhite;
   font-family: $font;
+  font-weight: 600;
+
 }
 .REVIEW:hover {
   background-color: rgb(255, 145, 102) !important;

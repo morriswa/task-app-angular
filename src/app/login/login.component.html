@@ -5,17 +5,17 @@
         </mat-button>
         <mat-menu #loginMenu="matMenu">
             <button mat-menu-item *ngIf="!loginStatus" (click)="login()">
-                <span>Login</span>
+                <span class="login_text">Login</span>
             </button>
             <button mat-menu-item *ngIf="!loginStatus" (click)="register()">
-                <span>Register</span>
+                <span class="login_text">Register</span>
             </button>
             <button mat-menu-item *ngIf="loginStatus" (click)="logout()">
-                <span>Logout</span>
+                <span class="login_text">Logout</span>
             </button>
         </mat-menu>
         
-        <span>MorrisWA Task App</span>
+        <span><h1 class="login_text">MorrisWA Task App</h1></span>
         
     </mat-toolbar-row>
 </mat-toolbar>
