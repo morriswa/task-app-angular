@@ -6,6 +6,16 @@ $font: 'Montserrat', sans-serif;
 // $font-hand: 'Amatic SC', cursive;
 $font-hand: $font;
 
+$font-big: 4rem;
+$font-reg: 2rem;
+$font-small: 1.5rem;
+
+$mobile-font-width-threshold: 800px;
+
+$mobile-font-big: 2.5rem;
+$mobile-font-reg: 1.5rem;
+$mobile-font-small: 1rem; 
+
 table {
   width: 100%;
 }
@@ -15,27 +25,41 @@ table {
     display: inline;
   }
 
-  h2{
+  h2 {
     color: $text-light;
     font-family: $font-hand;
-    font-size: 1.5rem; 
+    font-size: $font-small; 
     text-align: left;
   }
   
   #title {
     color: $text-dark;  
     font-family: $font-hand;
-    font-size: 4rem;
-    margin-bottom: 2rem;
+    font-size: $font-big;
     line-height: 1rem;
-    // overflow:visible;
+    text-overflow: ellipsis;
+    // overflow:scroll;
     white-space: nowrap;
+    margin-bottom: 2rem;
   }
 
   #status,#type {
     color: $text-light;
-    font-size: 1.5rem;
-    padding: .5rem;
+    font-size: $font-small;
+  }
+
+  @media (max-width: $mobile-font-width-threshold) {
+    #title {
+      font-size: $mobile-font-big;
+      line-height: 2rem;
+      overflow:visible;
+      white-space:normal;
+      margin-bottom: .5rem;
+
+    }
+    #status,#type {
+      font-size: $mobile-font-small;
+    }
   }
 }
 
@@ -43,24 +67,36 @@ table {
   h2 {
     color: $text-dark;
     font-family: $font;
-    font-size: 1.5rem; 
-    margin-top: 2rem;
+    font-size: $font-small;
+    // margin-top: 2rem;
     text-align: right; 
     font-weight: 600;
     // text-decoration: underline;
+    @media (max-width: $mobile-font-width-threshold) {
+      font-size: $mobile-font-small; 
+ 
+    }
   }
+
 }
 
 
 .task_description {
   p {
     color: $text-dark;
+    
     font-family: $font;
-    font-size: 1rem;
+    font-size: $font-small;
+    line-height: $font-reg;
     margin-left: 5%;
     text-align: left; 
   }
   margin-bottom: 20px;
+  @media (max-width: $mobile-font-width-threshold) {
+    font-size: $mobile-font-small; 
+    line-height: $mobile-font-small;
+  }
+  
 }
 
 

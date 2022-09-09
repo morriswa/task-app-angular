@@ -5,6 +5,17 @@ $font: 'Montserrat', sans-serif;
 // $font-hand: 'Amatic SC', cursive;
 $font-hand: $font;
 
+$font-xl: 7em;
+$font-big: 4rem;
+$font-reg: 2rem;
+$font-small: 1.5rem;
+
+$mobile-font-width-threshold: 800px;
+
+$mobile-font-big: 2.5rem;
+$mobile-font-reg: 1.5rem;
+$mobile-font-small: 1rem; 
+
 .planners_stylebody {
 
     padding-top: 2%;
@@ -15,18 +26,31 @@ $font-hand: $font;
         color: $text-dark;
         font-family: $font;
         font-weight: 300;
-        font-size: 2em;   
-        overflow: hidden;
-        white-space: nowrap;
+        font-size: $font-big
+        // overflow: hidden;
+        // white-space: nowrap;
     }
-    
+  
     :focus ,.mat-expansion-panel-header.mat-expanded {
         padding-top: 2%;
         padding-bottom: 2%;
         h1 { 
-            font-size: 7em;   
+            font-size: $font-xl;
             font-family: $font-hand;
         }
+    }
+
+    @media (max-width: $mobile-font-width-threshold) {
+        h1 {
+            font-size: $mobile-font-reg;
+        }
+
+        :focus ,.mat-expansion-panel-header.mat-expanded {
+            h1 { 
+                font-size: $mobile-font-big;
+            }
+        }
+
     }
 
 }
@@ -35,8 +59,13 @@ $font-hand: $font;
     font-family: $font-hand;
     color: $text-dark;
     font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 2rem;
+    font-size: $font-reg;
+    line-height: $font-reg;
+    @media (max-width: $mobile-font-width-threshold) {
+        font-size: $mobile-font-reg;
+        line-height: $mobile-font-reg;
+        font-weight: 400;
+    } 
 }
 
 .dates_stylebody {
@@ -44,8 +73,16 @@ $font-hand: $font;
     color: $text-dark;
     // line-height: 1rem;
     h2 {
-        font-size: 1.5em;
+        font-size: $font-reg;
+        line-height: $font-reg;
         font-weight: 600;
         text-align: right;
     }
+    @media (max-width: $mobile-font-width-threshold) {
+        h2 {
+            font-size: $mobile-font-reg;
+            line-height: $mobile-font-reg;
+            font-weight: 400;
+        }
+    } 
 }
