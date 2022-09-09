@@ -2,22 +2,26 @@
     <mat-spinner *ngIf="!LOADED_SUCCESSFULLY"></mat-spinner>
     
     <div *ngIf="LOADED_SUCCESSFULLY">
-    <mat-expansion-panel *ngFor="let planner of (planners$ | async)">
+    <mat-expansion-panel *ngFor="let planner of (planners$ | async)" class="planners_stylebody">
 
-        <mat-expansion-panel-header>{{ planner.name }}</mat-expansion-panel-header>
-        <h1 style="font-size: 48px;">{{ planner.name }}</h1>
+        
+        <mat-expansion-panel-header><h1>{{ planner.name }}</h1></mat-expansion-panel-header>
+    
+        <div class="info_panel_style">
+            <!-- <h1>{{ planner.name }}</h1> -->
 
-        <div    *ngIf="(planner.goal||[]).length!=0" 
-                class="goal_stylebody">
-            <h2>My goal for this planner is...</h2>
-            <h3>{{ planner.goal }}</h3>
+            <div *ngIf="(planner.goal||[]).length!=0">
+                <h2>My goal for this planner is...</h2>
+                <h3>{{ planner.goal }}</h3>
+            </div>
+        </div>
+            
+        <div    class="dates_stylebody"
+                *ngIf="planner.startDate != undefined && planner.finishDate != undefined">
+            <h2 class="dates">From {{ planner.startDate.toDateString() }}</h2>
+            <h2 class="dates">To {{ planner.finishDate.toDateString() }}</h2>
         </div>
         
-        <div    class="dates_stylebody" 
-                *ngIf="planner.startDate != undefined && planner.finishDate != undefined">
-            <h2>From {{ planner.startDate.toDateString() }}</h2>
-            <h2>To {{ planner.finishDate.toDateString() }}</h2>
-        </div>
 
         <app-task [PLANNER_ID]="planner.id" [EMAIL]="this.EMAIL"></app-task>
 
@@ -80,7 +84,7 @@
     </mat-expansion-panel>
 
     <mat-expansion-panel>
-        <mat-expansion-panel-header>Add Planner</mat-expansion-panel-header>
+        <mat-expansion-panel-header class="planners_style">Add Planner</mat-expansion-panel-header>
         <form [formGroup]="plannerFormField" >
             <mat-form-field appearance="outline">
                 <mat-label>Planner Name</mat-label>
