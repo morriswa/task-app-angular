@@ -2,60 +2,112 @@ table {
   width: 100%;
 }
 
-// EXPIRED
-.EXPIRED,.EXPIRED:focus {
-  background-color: rgb(68, 19, 114);
-} .EXPIRED_text {
+.task_title {
+  color: rgb(57, 57, 57);
+  font-size: 40px;
+
+}
+
+.task_status {
+  color: rgb(118, 118, 118);
+  font-size: 30px; 
+  text-align: left;
+  margin-left: 10%;
+}
+
+.task_type {
+  color: rgb(118, 118, 118);
+  font-size: 20px; 
+  text-align: left;
+  margin-left: 20%;
+}
+
+
+.task_description {
+  p {
+    color: rgb(57, 57, 57);  
+    font-size: 20px; 
+    margin-left: 5%;
+    text-align: left; 
+  }
+
+  margin-bottom: 20px;
+  
+}
+
+.task_due {
+  h2 {
+    color: rgb(57, 57, 57);
+    font-size: 30px; 
+    text-align: right; 
+    text-decoration: underline;
+  }
+  
+}
+
+// OLD
+.OLD,.OLD:focus {
+  background-color: rgb(180, 67, 108);
+} .OLD_text {
   color: rgb(255, 249, 241);
-} .EXPIRED:hover {
+} .OLD:hover {
   background-color: rgb(125, 59, 187) !important;
 }
 
+// EXPIRED
+.EXPIRED,.EXPIRED:focus {
+  background-color: rgb(6, 81, 67);
+} .EXPIRED_text {
+  color: rgb(255, 249, 241);
+
+} .EXPIRED:hover {
+  background-color: rgb(125, 59, 187) !important;
+}
+.EXPIRED_stylebody {
+  background-color: rgb(238, 220, 255);
+}
+
 // COMPLETED TURNED IN
-.COMPLETED,.COMPLETED:focus,
-.TURNED_IN,.TURNED_IN:focus {
-  background-color: rgb(30, 121, 22);
+.DONE,.DONE:focus {
+  background-color: rgb(95, 173, 86);
 } 
-.COMPLETED_text,
-.TURNED_IN_text {
+.DONE_text {
   color: rgb(255, 249, 241);
 }
-.COMPLETED:hover,
-.TURNED_IN:hover {
-  background-color: rgb(9, 92, 0) !important;
+.DONE:hover {
+  background-color: rgb(48, 132, 39) !important;
+}
+.DONE_stylebody {
+  background-color: rgb(224, 255, 220);
 }
  
 // NEW
-.NEW,.NEW:focus {
-  background-color: rgb(255, 224, 239);
+.STARTED,.STARTED:focus {
+  background-color: rgb(255, 228, 92);
 }
-.NEW_text {
+.STARTED_text {
   color: rgb(55, 55, 55);
 }
-.NEW:hover {
-  background-color: rgb(255, 175, 212) !important;
+.STARTED:hover {
+  background-color: rgb(255, 218, 34) !important;
+}
+.STARTED_stylebody {
+  background-color: rgb(255, 248, 212);
 }
 
-// IN PROGRESS
-.IN_PROGRESS,
-.IN_PROGRESS:focus {
-  background-color: rgb(255, 221, 134);
-}
-.IN_PROGRESS_text {
-  color: rgb(55, 55, 55);
-}
-.IN_PROGRESS:hover {
-  background-color: rgb(255, 183, 116) !important;
-}
 
 // REVIEW
 .REVIEW,
 .REVIEW:focus {
-  background-color: rgb(155, 238, 255);
+  background-color: rgb(247, 129, 84);
 }
 .REVIEW_text {
-  color: rgb(55, 55, 55);
+  color: rgb(255, 249, 241);
 }
 .REVIEW:hover {
-  background-color: rgb(134, 174, 255) !important;
+  background-color: rgb(255, 145, 102) !important;
+}
+.REVIEW_stylebody {
+  background-color: rgb(207, 239, 255);
+ 
 }

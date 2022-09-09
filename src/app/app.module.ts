@@ -25,6 +25,8 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatTableModule} from '@angular/material/table';
 import {MatCardModule} from '@angular/material/card';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+
 
 
 
@@ -36,6 +38,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     TaskComponent 
   ],
   imports: [
+    MatButtonToggleModule,
     MatTabsModule,
     MatCardModule,
     MatSortModule,

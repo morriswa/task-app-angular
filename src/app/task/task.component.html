@@ -1,160 +1,228 @@
 <mat-tab-group>
     <mat-tab label="All Tasks">
+        
         <mat-accordion>
             <!-- <mat-card>Title :: Due Date</mat-card> -->
-            <div *ngFor="let task of tasks$">
-            <mat-expansion-panel>
+            <mat-expansion-panel *ngFor="let task of (taskobs$ | async)" 
+                class="{{BETA_STATUS_CODES.get(task.status)?.css}}_stylebody">
                 
-                <mat-expansion-panel-header class="{{task.status}}">
-                    <mat-panel-title><p class="{{task.status}}_text">{{ task.title }}</p></mat-panel-title>
-                    <mat-panel-description *ngIf="task.dueDate != null">
-                        <p class="{{task.status}}_text">{{ toDateObj(task.dueDate).toDateString() }}</p></mat-panel-description>       
+                <mat-expansion-panel-header class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
+                    <mat-panel-title><p class="{{BETA_STATUS_CODES.get(task.status)?.css}}_text">{{ task.title }}</p></mat-panel-title>
+                    <mat-panel-description *ngIf="task.dueDate != undefined">
+                        <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}_text">{{ task.dueDate.toDateString() }}</p></mat-panel-description>       
                 </mat-expansion-panel-header>
 
-                <h2>{{ TASK_TYPE_CODES_MAP.get(task.type) + " -> " + task.title}}</h2>
-                <h3 *ngIf="task.status != undefined">Status -> {{ TASK_STATUS_CODES_MAP.get(task.status) }}</h3>
-                <h3 *ngIf="task.startDate != undefined">Start date -> {{ toDateObj(task.startDate).toDateString() }}</h3>
-                <h3 *ngIf="task.dueDate != undefined">Due date -> {{ toDateObj(task.dueDate).toDateString() }}</h3>
-                <h3 *ngIf="task.completedDate != undefined">Date completed -> {{ toDateObj(task.completedDate).toDateString() }}</h3>
-                <h4>{{ task.description }}</h4>
-               
-                <form [formGroup]="taskForm">
+                <h2 class="task_title">{{ task.title }}</h2>
+                <h2 class="task_status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</h2>
+                <h2 class="task_type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2>
+
+                <div *ngIf="task.dueDate != undefined && task.completedDate!= undefined " class="task_due">
+                    <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) < 2)">Due on {{ task.dueDate.toDateString() }}</h2>
+                    <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 2)">Completed on {{ task.completedDate.toDateString() }}</h2>
+                    <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 3)">Expired on {{ task.dueDate.toDateString() }}</h2>
+                </div>
+
+                <div    class="task_description" 
+                        *ngIf="(task.description||[]).length > 0">
+                    <mat-divider></mat-divider>
+                    <p>{{ task.description }}</p>
+                    <mat-divider></mat-divider>
+                </div>
+
+                <mat-button-toggle-group aria-label="Edit Mode">
+                    <mat-button-toggle (click)="taskEditMode = true">Edit</mat-button-toggle>
+                    <mat-button-toggle (click)="taskEditMode = false">Close</mat-button-toggle>
+                </mat-button-toggle-group>
+
+                <form [formGroup]="taskForm" *ngIf="taskEditMode">
                     <mat-form-field appearance="outline">
                         <mat-label>Rename</mat-label>
-                        <input matInput [placeholder]="task.title" type="text" name="task-name" formControlName="task-name">
+                        <input  matInput 
+                                [placeholder]="task.title" 
+                                type="text" 
+                                name="task-name" 
+                                formControlName="task-name">
                     </mat-form-field>
-        
                     <mat-divider></mat-divider>
-        
                     <mat-form-field appearance="outline">
                         <mat-label>Category</mat-label>
-                        <input matInput [placeholder]="task.category" type="text" name="task-category" formControlName="task-category">
+                        <input  matInput 
+                                [placeholder]="task.category" 
+                                type="text" name="task-category" 
+                                formControlName="task-category">
                     </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Details</mat-label>
-                        <input matInput [placeholder]="task.description" type="text" name="task-details" formControlName="task-details">
-                    </mat-form-field>
-        
-                    <mat-divider></mat-divider>
-                    
                     <mat-form-field appearance="outline">
                         <mat-label>Status</mat-label>
                         <mat-select matNativeControl formControlName="task-status">
-                            <mat-option *ngFor="let enum of TASK_STATUS_CODES" [value]="enum.enum">{{ enum.friendly }}</mat-option>
+                            <mat-option *ngFor="let enum of BETA_STATUS_CODES|keyvalue" 
+                                        [value]="enum.key">{{ enum.value.friendly }}</mat-option>
                         </mat-select>
                     </mat-form-field> 
                     <mat-form-field appearance="outline">
                         <mat-label>Type</mat-label>
                         <mat-select matNativeControl formControlName="task-type">
-                            <mat-option *ngFor="let enum of TASK_TYPE_CODES" [value]="enum.enum">{{ enum.friendly }}</mat-option>
+                            <mat-option *ngFor="let enum of TASK_TYPE_CODES_MAP|keyvalue" 
+                                        [value]="enum.key">{{ enum.value }}</mat-option>
                         </mat-select>
                     </mat-form-field> 
-                
                     <mat-divider></mat-divider>
-        
+                    <mat-form-field appearance="fill">
+                        <mat-label>Details</mat-label>
+                        <textarea   matInput 
+                                    placeholder="{{task.description}}" 
+                                    type="text" 
+                                    name="task-details" 
+                                    style="min-width: 100px; max-width: 500px; width: 100%;"
+                                    formControlName="task-details">
+                        </textarea>
+                    </mat-form-field>
+                    <mat-divider></mat-divider>
                     <mat-form-field>
-                        <input matInput [matDatepicker]="startDatePicker" name="task-start-date" formControlName="task-start-date">
+                        <input  matInput 
+                                [matDatepicker]="startDatePicker" 
+                                name="task-start-date" 
+                                formControlName="task-start-date">
                         <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
                         <mat-label>Task Start Date</mat-label>
                         <mat-datepicker #startDatePicker></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput [matDatepicker]="endDatePicker" name="task-due-date" formControlName="task-due-date">
+                        <input  matInput
+                                [matDatepicker]="endDatePicker" 
+                                name="task-due-date" 
+                                formControlName="task-due-date">
                         <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
                         <mat-label>Due Date</mat-label>
                         <mat-datepicker #endDatePicker></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput [matDatepicker]="completeDatePicker" name="task-complete-date" formControlName="task-complete-date">
+                        <input  matInput 
+                                [matDatepicker]="completeDatePicker" 
+                                name="task-complete-date" 
+                                formControlName="task-complete-date">
                         <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
                         <mat-label>Completion Date</mat-label>
                         <mat-datepicker #completeDatePicker></mat-datepicker>
                     </mat-form-field>
                 </form>
 
-                <mat-action-row>   
+                <mat-action-row  *ngIf="taskEditMode">   
                     <button mat-raised-button (click)="updateTask(task.id)">Save and Update!</button> 
                     <button mat-button (click)="deleteTask(task.id)">Delete</button>
                 </mat-action-row>
             
             </mat-expansion-panel>
-            </div>
+            
         </mat-accordion>
-
     </mat-tab>
-    <mat-tab *ngFor="let tab of categories$" [label]="tab">
+    <mat-tab *ngFor="let tab of (cats$ | async)" [label]="tab">
+        <ng-template matTabContent>
         <mat-accordion>
-            <div *ngFor="let task of tasks$">
-            <mat-expansion-panel *ngIf="task.category === tab">
-                
-                <mat-expansion-panel-header class="{{task.status}}">
-                    <mat-panel-title><p class="{{task.status}}_text">{{ task.title }}</p></mat-panel-title>
+            <div *ngFor="let task of (taskobs$ | async)">
+            <mat-expansion-panel *ngIf="task.category === tab"
+                class="{{BETA_STATUS_CODES.get(task.status)?.css}}_stylebody">
+                    
+                <mat-expansion-panel-header class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
+                    <mat-panel-title><p class="{{BETA_STATUS_CODES.get(task.status)?.css}}_text">{{ task.title }}</p></mat-panel-title>
                     <mat-panel-description *ngIf="task.dueDate != null">
-                        <p class="{{task.status}}_text">{{ toDateObj(task.dueDate).toDateString() }}</p></mat-panel-description>       
+                        <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}_text">{{ task.dueDate.toDateString() }}</p></mat-panel-description>       
                 </mat-expansion-panel-header>
 
-                <h2>{{ TASK_TYPE_CODES_MAP.get(task.type) + " -> " + task.title}}</h2>
-                <h3 *ngIf="task.status != undefined">Status -> {{ TASK_STATUS_CODES_MAP.get(task.status) }}</h3>
-                <h3 *ngIf="task.startDate != undefined">Start date -> {{ toDateObj(task.startDate).toDateString() }}</h3>
-                <h3 *ngIf="task.dueDate != undefined">Due date -> {{ toDateObj(task.dueDate).toDateString() }}</h3>
-                <h3 *ngIf="task.completedDate != undefined">Date completed -> {{ toDateObj(task.completedDate).toDateString() }}</h3>
-                <h4>{{ task.description }}</h4>
-               
-                <form [formGroup]="taskForm">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Rename</mat-label>
-                        <input matInput [placeholder]="task.title" type="text" name="task-name" formControlName="task-name">
-                    </mat-form-field>
-        
-                    <mat-divider></mat-divider>
-        
-                    <mat-form-field appearance="outline">
-                        <mat-label>Category</mat-label>
-                        <input matInput [placeholder]="task.category" type="text" name="task-category" formControlName="task-category">
-                    </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Details</mat-label>
-                        <input matInput [placeholder]="task.description" type="text" name="task-details" formControlName="task-details">
-                    </mat-form-field>
-        
-                    <mat-divider></mat-divider>
-                    
-                    <mat-form-field appearance="outline">
-                        <mat-label>Status</mat-label>
-                        <mat-select matNativeControl formControlName="task-status">
-                            <mat-option *ngFor="let enum of TASK_STATUS_CODES" [value]="enum.enum">{{ enum.friendly }}</mat-option>
-                        </mat-select>
-                    </mat-form-field> 
-                    <mat-form-field appearance="outline">
-                        <mat-label>Type</mat-label>
-                        <mat-select matNativeControl formControlName="task-type">
-                            <mat-option *ngFor="let enum of TASK_TYPE_CODES" [value]="enum.enum">{{ enum.friendly }}</mat-option>
-                        </mat-select>
-                    </mat-form-field> 
-                
-                    <mat-divider></mat-divider>
-        
-                    <mat-form-field>
-                        <input matInput [matDatepicker]="startDatePicker" name="task-start-date" formControlName="task-start-date">
-                        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-                        <mat-label>Task Start Date</mat-label>
-                        <mat-datepicker #startDatePicker></mat-datepicker>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput [matDatepicker]="endDatePicker" name="task-due-date" formControlName="task-due-date">
-                        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-                        <mat-label>Due Date</mat-label>
-                        <mat-datepicker #endDatePicker></mat-datepicker>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <input matInput [matDatepicker]="completeDatePicker" name="task-complete-date" formControlName="task-complete-date">
-                        <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
-                        <mat-label>Completion Date</mat-label>
-                        <mat-datepicker #completeDatePicker></mat-datepicker>
-                    </mat-form-field>
-                </form>
+                <h2 class="task_title">{{ task.title }}</h2>
+                <h2 class="task_status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</h2>
+                <h2 class="task_type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2>
 
-                <mat-action-row>   
+                <div *ngIf="task.dueDate != undefined && task.completedDate != undefined" class="task_due">
+                    <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) < 2)">Due on {{ (task.dueDate).toDateString() }}</h2>
+                    <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 2)">Completed on {{ (task.completedDate).toDateString() }}</h2>
+                    <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 3)">Expired on {{ (task.dueDate).toDateString() }}</h2>
+                </div>
+
+                <div    class="task_description" 
+                        *ngIf="(task.description||[]).length > 0">
+                    <mat-divider></mat-divider>
+                    <p>{{ task.description }}</p>
+                    <mat-divider></mat-divider>
+                </div>
+        
+                    <mat-button-toggle-group aria-label="Edit Mode">
+                        <mat-button-toggle (click)="taskEditMode = true">Edit</mat-button-toggle>
+                        <mat-button-toggle (click)="taskEditMode = false">Close</mat-button-toggle>
+                    </mat-button-toggle-group>
+    
+                    <form [formGroup]="taskForm" *ngIf="taskEditMode">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Rename</mat-label>
+                            <input  matInput 
+                                    [placeholder]="task.title" 
+                                    type="text" 
+                                    name="task-name" 
+                                    formControlName="task-name">
+                        </mat-form-field>
+                        <mat-divider></mat-divider>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Category</mat-label>
+                            <input  matInput 
+                                    [placeholder]="task.category" 
+                                    type="text" name="task-category" 
+                                    formControlName="task-category">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Status</mat-label>
+                            <mat-select matNativeControl formControlName="task-status">
+                                <mat-option *ngFor="let enum of BETA_STATUS_CODES|keyvalue" 
+                                        [value]="enum.key">{{ enum.value.friendly }}</mat-option>
+                            </mat-select>
+                        </mat-form-field> 
+                        <mat-form-field appearance="outline">
+                            <mat-label>Type</mat-label>
+                            <mat-select matNativeControl formControlName="task-type">
+                                <mat-option *ngFor="let enum of TASK_TYPE_CODES_MAP|keyvalue" 
+                                        [value]="enum.key">{{ enum.value }}</mat-option>
+                            </mat-select>
+                        </mat-form-field> 
+                        <mat-divider></mat-divider>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Details</mat-label>
+                            <textarea   matInput 
+                                        placeholder="{{task.description}}" 
+                                        type="text" 
+                                        name="task-details" 
+                                        style="min-width: 100px; max-width: 500px; width: 100%;"
+                                        formControlName="task-details">
+                            </textarea>
+                        </mat-form-field>
+                        <mat-divider></mat-divider>
+                        <mat-form-field>
+                            <input  matInput 
+                                    [matDatepicker]="startDatePicker" 
+                                    name="task-start-date" 
+                                    formControlName="task-start-date">
+                            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                            <mat-label>Task Start Date</mat-label>
+                            <mat-datepicker #startDatePicker></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input  matInput
+                                    [matDatepicker]="endDatePicker" 
+                                    name="task-due-date" 
+                                    formControlName="task-due-date">
+                            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                            <mat-label>Due Date</mat-label>
+                            <mat-datepicker #endDatePicker></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input  matInput 
+                                    [matDatepicker]="completeDatePicker" 
+                                    name="task-complete-date" 
+                                    formControlName="task-complete-date">
+                            <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
+                            <mat-label>Completion Date</mat-label>
+                            <mat-datepicker #completeDatePicker></mat-datepicker>
+                        </mat-form-field>
+                    </form>
+
+                <mat-action-row *ngIf="taskEditMode">   
                     <button mat-raised-button (click)="updateTask(task.id)">Save and Update!</button> 
                     <button mat-button (click)="deleteTask(task.id)">Delete</button>
                 </mat-action-row>
@@ -162,6 +230,7 @@
             </mat-expansion-panel>
             </div>
         </mat-accordion>
+    </ng-template>
     </mat-tab>
 </mat-tab-group>
 
@@ -199,7 +268,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by status">
             Status
             </th>
-            <td mat-cell *matCellDef="let element"> {{ TASK_STATUS_CODES_MAP.get(element.status) }} </td>
+            <td mat-cell *matCellDef="let element"> {{ BETA_STATUS_CODES.get(element.status)?.friendly }} </td>
         </ng-container>
 
         <!-- Symbol Column -->
@@ -208,8 +277,8 @@
             Due Date
             </th>
             <td mat-cell *matCellDef="let element"> 
-                <p *ngIf="element.dueDate != null">
-                {{ toDateObj(element.dueDate).toDateString() }} </p>
+                <p *ngIf="element.dueDate != undefined">
+                {{ (element.dueDate).toDateString() }} </p>
             </td>
         </ng-container>
 
@@ -225,50 +294,70 @@
         <form [formGroup]="taskForm">
             <mat-form-field appearance="outline">
                 <mat-label>Task Name</mat-label>
-                <input matInput type="text" name="task-name" formControlName="task-name" required="true">
+                <input  matInput 
+                        type="text" 
+                        name="task-name" 
+                        formControlName="task-name">
             </mat-form-field>
-
             <mat-divider></mat-divider>
-
             <mat-form-field appearance="outline">
                 <mat-label>Category</mat-label>
-                <input matInput type="text" name="task-category" formControlName="task-category">
+                <input  matInput 
+                        type="text" name="task-category" 
+                        formControlName="task-category">
             </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Details</mat-label>
-                <input matInput type="text" name="task-details" formControlName="task-details">
-            </mat-form-field>
-
-            <mat-divider></mat-divider>
-            
             <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select matNativeControl formControlName="task-status">
-                    <mat-option *ngFor="let enum of TASK_STATUS_CODES" [value]="enum.enum">{{ enum.friendly }}</mat-option>
+                    <mat-option *ngFor="let enum of BETA_STATUS_CODES|keyvalue" 
+                                        [value]="enum.key">{{ enum.value.friendly }}</mat-option>
                 </mat-select>
             </mat-form-field> 
             <mat-form-field appearance="outline">
                 <mat-label>Type</mat-label>
                 <mat-select matNativeControl formControlName="task-type">
-                    <mat-option *ngFor="let enum of TASK_TYPE_CODES" [value]="enum.enum">{{ enum.friendly }}</mat-option>
+                    <mat-option *ngFor="let enum of TASK_TYPE_CODES_MAP|keyvalue" 
+                                        [value]="enum.key">{{ enum.value }}</mat-option>
                 </mat-select>
             </mat-form-field> 
-        
             <mat-divider></mat-divider>
-
+            <mat-form-field appearance="fill">
+                <mat-label>Details</mat-label>
+                <textarea   matInput 
+                            type="text" 
+                            name="task-details" 
+                            style="min-width: 100px; max-width: 500px; width: 100%;"
+                            formControlName="task-details">
+                </textarea>
+            </mat-form-field>
+            <mat-divider></mat-divider>
             <mat-form-field>
-                <input matInput [matDatepicker]="startDatePicker" name="task-start-date" formControlName="task-start-date">
+                <input  matInput 
+                        [matDatepicker]="startDatePicker" 
+                        name="task-start-date" 
+                        formControlName="task-start-date">
                 <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
                 <mat-label>Task Start Date</mat-label>
                 <mat-datepicker #startDatePicker></mat-datepicker>
             </mat-form-field>
             <mat-form-field>
-                <input matInput [matDatepicker]="endDatePicker" name="task-due-date" formControlName="task-due-date">
+                <input  matInput
+                        [matDatepicker]="endDatePicker" 
+                        name="task-due-date" 
+                        formControlName="task-due-date">
                 <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
                 <mat-label>Due Date</mat-label>
                 <mat-datepicker #endDatePicker></mat-datepicker>
             </mat-form-field>
-
+            <mat-form-field>
+                <input  matInput 
+                        [matDatepicker]="completeDatePicker" 
+                        name="task-complete-date" 
+                        formControlName="task-complete-date">
+                <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
+                <mat-label>Completion Date</mat-label>
+                <mat-datepicker #completeDatePicker></mat-datepicker>
+            </mat-form-field>
         </form>
 
         <mat-action-row>

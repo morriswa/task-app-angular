@@ -10,6 +10,13 @@ import { Task } from '../interface/task';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {AfterViewInit} from '@angular/core';
 import { TaskStatus } from '../interface/task-status';
+import { lastValueFrom, map, Observable, of } from 'rxjs';
+
+interface StylePropertyObject {
+  friendly : string;
+  precedence : number;
+  css : string;
+} 
 
 @Component({
   selector: 'app-task',
@@ -17,40 +24,49 @@ import { TaskStatus } from '../interface/task-status';
   styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit,AfterViewInit {
-  public TASK_STATUS_CODES: { enum:string,friendly:string }[] = 
-  [ {enum : "BACKLOG",friendly : "Backlog" },
-    {enum : "NEW",friendly : "New" },
-    {enum : "STARTED",friendly : "Started" },
-    {enum : "IN_PROGRESS",friendly : "In Progress" },
-    {enum : "PAST_DUE",friendly : "Overdue" },
-    {enum : "REVIEW",friendly : "Review" },
-    {enum : "COMPLETED",friendly : "Complete" },
-    {enum : "TURNED_IN",friendly : "Submitted" },
-    {enum : "CLOSED",friendly : "Closed" },
-    {enum : "EXPIRED",friendly : "Expired" }];
-
-    public TASK_STATUS_CODES_MAP: Map<String,String> = new Map([
-      ["BACKLOG","Backlog"],
-      ["NEW","New"],
-      ["STARTED","Started"],
-      ["IN_PROGRESS","In Progress"],
-      ["PAST_DUE","Overdue"],
-      ["REVIEW","Review"],
-      ["COMPLETED","Complete"],
-      ["TURNED_IN","Submitted"],
-      ["CLOSED","Closed"],
-      ["EXPIRED","Expired"],
-    ]);
-  
-  public TASK_TYPE_CODES: { enum:string,friendly:string }[] =
-  [ {enum : "TASK",friendly : "Task" },
-    {enum : "ASSIGNMENT",friendly : "Assignment" },
-    {enum : "QUIZ",friendly : "Quiz" },
-    {enum : "TEST",friendly : "Test" },
-    {enum : "GRADED_ASSIGNMENT",friendly : "Graded Assignment" },
-    {enum : "PROJECT",friendly : "Project" },
-    {enum : "TASK_HOME_QUIZ",friendly : "Take Home Quiz" },
-    {enum : "TASK_HOME_TEST",friendly : "Take Home Test" },];
+  // CRAP 
+  public BETA_STATUS_CODES: Map<String,StylePropertyObject> = new Map(
+    [ ["BACKLOG",{
+        "friendly" : "Backlog",
+        "precedence" : TaskStatus.BACKLOG,
+        "css" : "OLD"}],
+      ["PAST_DUE",{
+        "friendly" : "Overdue",
+        "precedence" : TaskStatus.PAST_DUE,
+        "css" : "OLD"}],
+      ["NEW",{
+        "friendly" : "New",
+        "precedence" : TaskStatus.NEW,
+        "css" : "STARTED"}],
+      ["STARTED",{
+        "friendly" : "Started",
+        "precedence" : TaskStatus.STARTED,
+        "css" : "STARTED"}],
+      ["IN_PROGRESS",{
+        "friendly" : "In Progress",
+        "precedence" : TaskStatus.IN_PROGRESS,
+        "css" : "STARTED"}],
+      ["REVIEW",{
+        "friendly" : "Review",
+        "precedence" : TaskStatus.REVIEW,
+        "css" : "REVIEW"}],
+      ["COMPLETED",{
+        "friendly" : "Complete",
+        "precedence" : TaskStatus.COMPLETED,
+        "css" : "DONE"}],
+      ["TURNED_IN",{
+        "friendly" : "Submitted",
+        "precedence" : TaskStatus.TURNED_IN,
+        "css" : "DONE"}],
+      ["CLOSED",{
+        "friendly" : "Closed",
+        "precedence" : TaskStatus.CLOSED,
+        "css" : "DONE"}],
+      ["EXPIRED",{
+        "friendly" : "Expired",
+        "precedence" : TaskStatus.EXPIRED,
+        "css" : "EXPIRED"}],
+      ]);
 
   public TASK_TYPE_CODES_MAP: Map<String,String> = new Map([
     ["TASK","Task"],
@@ -61,26 +77,25 @@ export class TaskComponent implements OnInit,AfterViewInit {
     ["PROJECT","Project"],
     ["TASK_HOME_QUIZ","Take Home Quiz"],
     ["TASK_HOME_TEST","Take Home Test"],
-  ])
+  ]);
 
+
+  // STATE
+  public taskobs$: Observable<Task[]> = of([]);
+  public cats$: Observable<string[]> = of([]);
+
+
+  // INIT
   @Input() PLANNER_ID: number=0;
   @Input() EMAIL: string="";
-
-  public tasks$: Task[] = [];
-  public categories$: string[] = [];
+  @ViewChild('taskTableSort') sort: MatSort = new MatSort();
 
   public taskForm: FormGroup;
-
+  public taskEditMode:boolean = false;
   displayedColumns: string[] = ['category','title', 'status', 'dueDate'];
   dataSource = new MatTableDataSource<Task>();
 
-  @ViewChild('taskTableSort') sort: MatSort = new MatSort();
-
-  
-
-  constructor(private http:HttpClient,private fb:FormBuilder
-    ,private _liveAnnouncer: LiveAnnouncer
-    ) { 
+  constructor(private http:HttpClient,private fb:FormBuilder,private _liveAnnouncer: LiveAnnouncer) { 
     this.taskForm = this.fb.group({
       "task-name" : "",
       "task-category" : "",
@@ -93,23 +108,56 @@ export class TaskComponent implements OnInit,AfterViewInit {
     });
   }
 
-
   ngOnInit(): void {
     this.getTasks();
-    this.fetchCategoryNames();
   }
 
   ngAfterViewInit() {
     this.sortTaskTable();
-    this.fetchCategoryNames();
   }
 
-  fetchCategoryNames() {
-    let categories: Set<string> = new Set();
-    this.tasks$.forEach(task => { categories.add(task.category)})
-    this.categories$ = Array.from(categories);
+  getTasks() {
+    this.taskobs$ = this.http.get<Planner>(environment.api + "planner",{
+      headers : {
+        "email" : this.EMAIL,
+      } , params : {
+        "planner_id" : this.PLANNER_ID
+      }
+    }).pipe(
+      map(planner => {
+        let newtaskarray = Array.from(planner.tasks);
+       
+        newtaskarray.forEach(task => {
+          task.startDate = (task.startDate != undefined && task.startDate != null)? new Date(task.startDate) : undefined;
+          task.dueDate = (task.dueDate != undefined && task.dueDate != null)? new Date(task.dueDate) : undefined;
+          task.completedDate = (task.completedDate != undefined && task.completedDate != null)? new Date(task.completedDate) : undefined;
+        });
+
+        newtaskarray.sort((a,b)=>{
+          if (TaskStatus[<keyof typeof TaskStatus> a.status] > TaskStatus[<keyof typeof TaskStatus> b.status]) {
+            return 1
+          } else if (TaskStatus[<keyof typeof TaskStatus> a.status] < TaskStatus[<keyof typeof TaskStatus> b.status]) {
+            return -1
+          } else {
+            return (a.dueDate != undefined && b.dueDate != undefined)? a.dueDate.getTime() - b.dueDate.getTime() : -1;
+          } 
+        }); 
+
+        return newtaskarray;
+      })
+    );
+    this.cats$ = this.taskobs$.pipe(
+      map(obs => {
+        let tasks = Array.from(obs);
+        let getsetgo = new Set<string>();
+        tasks.forEach(task => {getsetgo.add(task.category)})
+        return Array.from(getsetgo);
+      })
+    );
   }
 
+
+  // HELPERS 
   /** Announce the change in sort state for assistive technology. */
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
@@ -123,15 +171,11 @@ export class TaskComponent implements OnInit,AfterViewInit {
     }
   }
 
-  toDateObj(date:Date): Date {
-    return new Date(date);
-  }
-
-  sortTaskTable() {
-    this.dataSource = new MatTableDataSource(this.tasks$);
+  async sortTaskTable() {
+    this.dataSource = new MatTableDataSource(await lastValueFrom(this.taskobs$));
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch(property) {
-        case 'dueDate': return this.toDateObj(item.dueDate).getTime();
+        case 'dueDate': return item.dueDate!.getTime();
         case 'status' : return (TaskStatus[<keyof typeof TaskStatus> item.status]);
         default: return item.id;
       }
@@ -139,32 +183,12 @@ export class TaskComponent implements OnInit,AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  getTasks() {
-    this.http.get<Planner>(environment.api + "planner",{
-      headers : {
-        "email" : this.EMAIL,
-      } , params : {
-        "planner_id" : this.PLANNER_ID
-      }
-    }).subscribe({
-      next : obs =>{
-        this.tasks$ = Object.assign(new Array<Task>(), obs.tasks);
-        this.tasks$.sort((a,b)=>{
-          if (TaskStatus[<keyof typeof TaskStatus> a.status] > TaskStatus[<keyof typeof TaskStatus> b.status]) {
-            return 1
-          } else if (TaskStatus[<keyof typeof TaskStatus> a.status] < TaskStatus[<keyof typeof TaskStatus> b.status]) {
-            return -1
-          } else {
-            return this.toDateObj(a.dueDate).getTime() - this.toDateObj(b.dueDate).getTime() ;
-          } 
-        });
-        this.sortTaskTable();
-        this.fetchCategoryNames();
-      }, 
-      error : err => console.error(err)
-    })
+  getTaskStatusCode(task:Task): number {
+    return TaskStatus[<keyof typeof TaskStatus> task.status];
   }
 
+
+  // FUNCTIONS
   addTaskRequest() {
     let TASK_NAME: string = this.taskForm.get("task-name")?.value;
     let TASK_CATEGORY: string = this.taskForm.get("task-category")?.value;
@@ -214,8 +238,9 @@ export class TaskComponent implements OnInit,AfterViewInit {
     }).subscribe({
       next : obs => {
         this.getTasks();
-        this.taskForm.reset();
         this.sortTaskTable();
+        // this.ngOnInit();
+        this.taskForm.reset();
       }, error : err => console.error(err)
     });
   }
@@ -230,8 +255,11 @@ export class TaskComponent implements OnInit,AfterViewInit {
         "task-id" : TASK_ID
       }
     }).subscribe({
-      next : obs => this.getTasks(),
-      error : err => console.error(err)
+      next : obs => {
+        this.getTasks();
+        this.sortTaskTable();
+        this.taskEditMode = false;
+      }, error : err => console.error(err)
     });
   }
 
@@ -297,6 +325,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
         this.getTasks();
         this.taskForm.reset();
         this.sortTaskTable();
+        this.taskEditMode = false;
       }, error : err => console.error(err)
     }); 
   }

@@ -3,9 +3,9 @@ export interface Task {
     planner: JSON;
     title: string;
     creationDate: Date;
-    startDate: Date;
-    dueDate: Date;
-    completedDate: Date;
+    startDate: Date | undefined;
+    dueDate: Date | undefined;
+    completedDate: Date | undefined;
     category: string;
     description: string;
     status: string;
