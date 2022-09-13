@@ -333,4 +333,34 @@ export class TaskComponent implements OnInit,AfterViewInit {
       }, error : err => console.error(err)
     }); 
   }
+
+  completeTask(taskId:number) {
+    let COMPLETED_DATE: Date | null = this.taskForm.get("task-complete-date")?.value;
+
+    let request: CustomRequest = {
+      "planner-id" : this.PLANNER_ID,
+      "task-id" : taskId
+    };
+
+    request['task-status'] = "COMPLETED";
+
+    if (COMPLETED_DATE != null) {
+      request['finish-year'] = COMPLETED_DATE.getFullYear();
+      request['finish-month'] = COMPLETED_DATE.getMonth();
+      request['finish-day'] = COMPLETED_DATE.getDate();
+    }
+
+    this.http.patch<Planner>(environment.api + "task/update",request,{
+      headers : {
+        "email" : this.EMAIL
+      }
+    }).subscribe({
+      next : obs => {
+        this.getTasks();
+        this.taskForm.reset();
+        this.sortTaskTable();
+        this.taskEditMode = false;
+      }, error : err => console.error(err)
+    }); 
+  }
 }

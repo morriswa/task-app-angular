@@ -20,6 +20,25 @@ table {
   width: 100%;
 }
 
+.closed_task_text {
+  background-color: rgb(95, 173, 86);
+  p {
+    color: $text-nearwhite;
+    font-family: $font;
+    font-weight: 600;
+  }
+} 
+.closed_task_text:focus {
+  background-color: rgb(228, 255, 225);
+  p {
+    color: $text-dark;
+  }
+}
+.closed_task_text:hover {
+  background-color: rgb(48, 132, 39) !important;
+}
+
+
 .task_info {
   p {
     display: inline;
@@ -78,6 +97,10 @@ table {
     }
   }
 
+}
+
+.task_details_box {
+  min-width: 75%; max-width: 800px;
 }
 
 
