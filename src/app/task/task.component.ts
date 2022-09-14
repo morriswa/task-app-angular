@@ -11,8 +11,9 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {AfterViewInit} from '@angular/core';
 import { TaskStatus } from '../interface/task-status';
 import { lastValueFrom, map, Observable, of } from 'rxjs';
+import { TaskDetailsComponent } from '../task-details/task-details.component';
 
-interface StylePropertyObject {
+export interface StylePropertyObject {
   friendly : string;
   precedence : number;
   css : string;
@@ -25,59 +26,63 @@ interface StylePropertyObject {
 })
 export class TaskComponent implements OnInit,AfterViewInit {
   // CRAP 
-  public BETA_STATUS_CODES: Map<String,StylePropertyObject> = new Map(
-    [ ["BACKLOG",{
-        "friendly" : "Backlog",
-        "precedence" : TaskStatus.BACKLOG,
-        "css" : "OLD"}],
-      ["PAST_DUE",{
-        "friendly" : "Overdue",
-        "precedence" : TaskStatus.PAST_DUE,
-        "css" : "OLD"}],
-      ["NEW",{
-        "friendly" : "New",
-        "precedence" : TaskStatus.NEW,
-        "css" : "STARTED"}],
-      ["STARTED",{
-        "friendly" : "Started",
-        "precedence" : TaskStatus.STARTED,
-        "css" : "STARTED"}],
-      ["IN_PROGRESS",{
-        "friendly" : "In Progress",
-        "precedence" : TaskStatus.IN_PROGRESS,
-        "css" : "STARTED"}],
-      ["REVIEW",{
-        "friendly" : "Review",
-        "precedence" : TaskStatus.REVIEW,
-        "css" : "REVIEW"}],
-      ["COMPLETED",{
-        "friendly" : "Complete",
-        "precedence" : TaskStatus.COMPLETED,
-        "css" : "DONE"}],
-      ["TURNED_IN",{
-        "friendly" : "Submitted",
-        "precedence" : TaskStatus.TURNED_IN,
-        "css" : "DONE"}],
-      ["CLOSED",{
-        "friendly" : "Closed",
-        "precedence" : TaskStatus.CLOSED,
-        "css" : "DONE"}],
-      ["EXPIRED",{
-        "friendly" : "Expired",
-        "precedence" : TaskStatus.EXPIRED,
-        "css" : "EXPIRED"}],
-      ]);
-
-  public TASK_TYPE_CODES_MAP: Map<String,String> = new Map([
-    ["TASK","Task"],
-    ["ASSIGNMENT","Assignment"],
-    ["QUIZ","Quiz"],
-    ["TEST","Test"],
-    ["GRADED_ASSIGNMENT","Graded Assignment"],
-    ["PROJECT","Project"],
-    ["TASK_HOME_QUIZ","Take Home Quiz"],
-    ["TASK_HOME_TEST","Take Home Test"],
-  ]);
+  getCodeMaps(): { status:Map<String,StylePropertyObject>,type:Map<String,String> } {
+    return { 
+      status:new Map(
+      [ ["BACKLOG",{
+          "friendly" : "Backlog",
+          "precedence" : TaskStatus.BACKLOG,
+          "css" : "OLD"}],
+        ["PAST_DUE",{
+          "friendly" : "Overdue",
+          "precedence" : TaskStatus.PAST_DUE,
+          "css" : "OLD"}],
+        ["NEW",{
+          "friendly" : "New",
+          "precedence" : TaskStatus.NEW,
+          "css" : "STARTED"}],
+        ["STARTED",{
+          "friendly" : "Started",
+          "precedence" : TaskStatus.STARTED,
+          "css" : "STARTED"}],
+        ["IN_PROGRESS",{
+          "friendly" : "In Progress",
+          "precedence" : TaskStatus.IN_PROGRESS,
+          "css" : "STARTED"}],
+        ["REVIEW",{
+          "friendly" : "Review",
+          "precedence" : TaskStatus.REVIEW,
+          "css" : "REVIEW"}],
+        ["COMPLETED",{
+          "friendly" : "Complete",
+          "precedence" : TaskStatus.COMPLETED,
+          "css" : "DONE"}],
+        ["TURNED_IN",{
+          "friendly" : "Submitted",
+          "precedence" : TaskStatus.TURNED_IN,
+          "css" : "DONE"}],
+        ["CLOSED",{
+          "friendly" : "Closed",
+          "precedence" : TaskStatus.CLOSED,
+          "css" : "DONE"}],
+        ["EXPIRED",{
+          "friendly" : "Expired",
+          "precedence" : TaskStatus.EXPIRED,
+          "css" : "EXPIRED"}],
+        ]),type:new Map(
+          [ ["TASK","Task"],
+            ["ASSIGNMENT","Assignment"],
+            ["QUIZ","Quiz"],
+            ["TEST","Test"],
+            ["GRADED_ASSIGNMENT","Graded Assignment"],
+            ["PROJECT","Project"],
+            ["TASK_HOME_QUIZ","Take Home Quiz"],
+            ["TASK_HOME_TEST","Take Home Test"],
+        ])};
+  }
+  public BETA_STATUS_CODES: Map<String,StylePropertyObject> = this.getCodeMaps().status
+  public TASK_TYPE_CODES_MAP: Map<String,String> = this.getCodeMaps().type
+  @ViewChild(TaskDetailsComponent ) child !:any ;
 
 
   // STATE

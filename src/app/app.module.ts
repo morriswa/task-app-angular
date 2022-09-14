@@ -26,6 +26,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatCardModule} from '@angular/material/card';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { TaskDetailsComponent } from './task-details/task-details.component';
 
 
 
@@ -35,7 +36,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     AppComponent,
     LoginComponent,
     PlannerComponent,
-    TaskComponent 
+    TaskComponent,
+    TaskDetailsComponent 
   ],
   imports: [
     MatButtonToggleModule,
