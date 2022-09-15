@@ -1,9 +1,5 @@
 <mat-accordion>
-    <mat-spinner *ngIf="!LOADED_SUCCESSFULLY"></mat-spinner>
-    
-    <div *ngIf="LOADED_SUCCESSFULLY">
     <mat-expansion-panel *ngFor="let planner of (planners$ | async)" class="planners_stylebody">
-
         
         <mat-expansion-panel-header><h1>{{ planner.name }}</h1></mat-expansion-panel-header>
     
@@ -126,5 +122,4 @@
             <button mat-raised-button (click)="newPlannerRequest()">New Planner</button>`
         </mat-action-row>
     </mat-expansion-panel>    
-    </div>
 </mat-accordion>

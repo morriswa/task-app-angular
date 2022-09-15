@@ -4,13 +4,13 @@
             <mat-icon>menu</mat-icon>
         </mat-button>
         <mat-menu #loginMenu="matMenu">
-            <button mat-menu-item *ngIf="!loginStatus" (click)="login()">
+            <button mat-menu-item *ngIf="!(loginStatus$|async)" (click)="login()">
                 <span class="login_text">Login</span>
             </button>
-            <button mat-menu-item *ngIf="!loginStatus" (click)="register()">
+            <button mat-menu-item *ngIf="!(loginStatus$|async)" (click)="register()">
                 <span class="login_text">Register</span>
             </button>
-            <button mat-menu-item *ngIf="loginStatus" (click)="logout()">
+            <button mat-menu-item *ngIf="(loginStatus$|async)" (click)="logout()">
                 <span class="login_text">Logout</span>
             </button>
         </mat-menu>
@@ -19,4 +19,12 @@
     </mat-toolbar-row>
 </mat-toolbar>
 
-<button mat-raised-button color="primary" style="margin-top:10%;margin-left: 15%"  (click)="login()" *ngIf="!loginStatus">Let's get started!</button>
+<button mat-raised-button 
+        color="primary" 
+        style="margin-top:10%;margin-left: 15%"  
+        (click)="login()" 
+        *ngIf="!(loginStatus$|async)">
+        Let's get started!</button>
+
+<app-planner *ngIf="(loginStatus$|async)"
+             [EMAIL]="this.email"></app-planner>

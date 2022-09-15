@@ -1,6 +1,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AuthService, User } from '@auth0/auth0-angular';
+import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -9,23 +10,28 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  public loginStatus: boolean = false;
-
-  private email:string="";
+  public loginStatus$: Observable<boolean> = of(false);
+  public email:string="";
+  
   constructor(private auth0: AuthService, private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.auth0.isAuthenticated$.subscribe(obs => {
-      this.loginStatus = obs;
-    });
-    this.auth0.user$.subscribe(sub => {
-      this.email = sub?.email!;
-    });
+    this.getAuthState();
+  }
+
+  getAuthState() {
+    this.loginStatus$ = this.auth0.isAuthenticated$;
+
+    this.auth0.user$.subscribe({
+      next : sub => this.email = sub?.email!,
+      error : err => {
+        console.error(err);
+        setTimeout(() => this.getAuthState(),3000);
+      }});
   }
 
   login() {
     this.auth0.loginWithPopup();
-
   }
 
   testLogin() {

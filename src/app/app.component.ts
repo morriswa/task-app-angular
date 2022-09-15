@@ -9,11 +9,9 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'task-app-angular';
-  isLoggedIn$!: Observable<boolean>;
 
-  constructor(private auth0: AuthService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.isLoggedIn$ = this.auth0.isAuthenticated$;
   }
 }

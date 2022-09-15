@@ -1,7 +1,7 @@
 <mat-tab-group>
     <mat-tab label="All Tasks">
-        <mat-accordion>
 
+        <mat-accordion>
             <div *ngFor="let task of (taskobs$ | async)">
                 <app-task-details   *ngIf="getTaskStatusCode(task) <= 1"
                                     [functionCalls]="this" 
@@ -13,13 +13,15 @@
             <mat-expansion-panel>
                 <mat-expansion-panel-header class="closed_task_text"><p>Closed Tasks</p></mat-expansion-panel-header>
                 
-                <mat-accordion><div *ngFor="let task of (taskobs$ | async)">
-                    <app-task-details   *ngIf="getTaskStatusCode(task) > 1"
-                                        [functionCalls]="this" 
-                                        [task]="task" 
-                                        [taskForm]="taskForm">
-                                    </app-task-details>
-                </div></mat-accordion>
+                <div  style="margin-top: 2.5%;"><mat-accordion>
+                    <div *ngFor="let task of (taskobs$ | async)">
+                        <app-task-details   *ngIf="getTaskStatusCode(task) > 1"
+                                            [functionCalls]="this" 
+                                            [task]="task" 
+                                            [taskForm]="taskForm">
+                                        </app-task-details>
+                    </div>
+                </mat-accordion></div>
             </mat-expansion-panel>
 
         </mat-accordion>
@@ -39,13 +41,15 @@
                 <mat-expansion-panel>
                     <mat-expansion-panel-header class="closed_task_text"><p>Closed Tasks</p></mat-expansion-panel-header>
                     
-                    <mat-accordion><div *ngFor="let task of (taskobs$ | async)">
-                        <app-task-details   *ngIf="(getTaskStatusCode(task) > 1) && (task.category == tab)"
-                                            [functionCalls]="this" 
-                                            [task]="task" 
-                                            [taskForm]="taskForm">
-                                        </app-task-details>
-                    </div></mat-accordion>
+                    <div  style="margin-top: 2.5%;"><mat-accordion>
+                        <div *ngFor="let task of (taskobs$ | async)">
+                            <app-task-details   *ngIf="(getTaskStatusCode(task) > 1) && (task.category == tab)"
+                                                [functionCalls]="this" 
+                                                [task]="task" 
+                                                [taskForm]="taskForm">
+                                            </app-task-details>
+                        </div>
+                    </mat-accordion></div>
                 </mat-expansion-panel>
                 
             </mat-accordion>

@@ -1,12 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from '@auth0/auth0-angular';
 import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Planner } from '../interface/planner';
 import { CustomRequest } from '../interface/request';
-import { UserProfile } from '../interface/user-profile';
 
 @Component({
   selector: 'app-planner',
@@ -15,17 +13,16 @@ import { UserProfile } from '../interface/user-profile';
 })
 export class PlannerComponent implements OnInit {
   // PUBLIC STATE
-  public LOADED_SUCCESSFULLY:boolean = false;
   public editPlannerMode = false;
-
-  public EMAIL:string="";
   public planners$:Observable<Planner[]>=of([]);
+  public LOADED_SUCCESSFULLY:boolean = false;
 
   
   // INIT
+  @Input() public EMAIL:string="";
   public plannerFormField:FormGroup;
 
-  constructor(private auth0: AuthService,private http: HttpClient,private fb:FormBuilder) {
+  constructor(private http: HttpClient,private fb:FormBuilder) {
     this.plannerFormField = this.fb.group({
       "planner-name" : "",
       "planner-goal" : "",
@@ -35,19 +32,19 @@ export class PlannerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getEmail();
+    // this.getEmail();
     this.getPlanners();
   }
 
-  getEmail(): void {
-    this.auth0.user$.subscribe({
-      next : (user) => this.EMAIL = user?.email!,
-      error : (err) => {
-        console.error(err);
-        setTimeout(() => this.getEmail(),5000);
-      }
-    });
-  }
+  // getEmail(): void {
+  //   this.auth0.user$.subscribe({
+  //     next : (user) => this.EMAIL = user?.email!,
+  //     error : (err) => {
+  //       console.error(err);
+  //       setTimeout(() => this.getEmail(),5000);
+  //     }
+  //   });
+  // }
 
   getPlanners(): void {
     this.planners$ = this.http.get<Planner[]>(environment.api + "planner/all",{
