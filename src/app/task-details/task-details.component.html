@@ -1,32 +1,27 @@
 <mat-expansion-panel class="{{BETA_STATUS_CODES.get(task.status)?.css}}_stylebody">
     
-    <div  class="{{BETA_STATUS_CODES.get(task.status)?.css}}"></div>
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
-                {{ task.title }}</p></mat-panel-title>
+            <p>{{ task.title }}</p></mat-panel-title>
         <mat-panel-description *ngIf="task.dueDate != undefined">
-            <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
-                {{ task.dueDate.toDateString() }}</p></mat-panel-description>       
+            <p > {{ task.dueDate.toDateString() }}</p></mat-panel-description>       
     </mat-expansion-panel-header>
 
-    <div class="task_info">
-        <h2 id="title">{{ task.title }}</h2>
+    <h2 id="title">{{ task.title }}</h2>
         
-        <h2>
-            <p id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</p>
-            <p style="color: rgb(57,57,57);">|</p>
-            <p id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</p>
-        </h2>
+    <div id="task_info">
+        <h2 id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</h2>
+        <h2 style="color: rgb(57,57,57);" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">|</h2>
+        <h2 id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2>
     </div>
 
-    <div *ngIf="task.dueDate != undefined" class="task_due">
+    <div *ngIf="task.dueDate != undefined" id="task_due">
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) < 2)">Due on {{ task.dueDate.toDateString() }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 2) && task.completedDate!= undefined">Completed on {{ task.completedDate.toDateString() }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 3)">Expired on {{ task.dueDate.toDateString() }}</h2>
     </div>
 
-    <div    class="task_description" 
+    <div    id="task_description" 
             *ngIf="(task.description||[]).length > 0">
         <mat-divider></mat-divider>
         <p>{{ task.description }}</p>

@@ -39,46 +39,36 @@ table {
 } 
 
 
-.task_info {
-  p {
-    display: inline;
-  }
-
+#task_info {
   h2 {
+    display: inline;
     color: $text-light;
-    font-family: $font-hand;
     font-size: $font-small; 
     text-align: left;
-  }
-  
-  #title {
-    color: $text-dark;  
-    font-family: $font-hand;
-    font-size: $font-big;
-    line-height: 1rem;
-    text-overflow: ellipsis;
-    // overflow:scroll;
-    white-space: nowrap;
-    margin-bottom: 2rem;
-    @media (max-width: $mobile-font-width-threshold) {
-      font-size: $mobile-font-big;
-      line-height: 2rem;
-      overflow:visible;
-      white-space:normal;
-      margin-bottom: .5rem;
-    }
-  }
-
-  #status,#type {
-    color: $text-light;
-    font-size: $font-small;
     @media (max-width: $mobile-font-width-threshold) {
       font-size: $mobile-font-small;
     }
   }
 }
 
-.task_due {
+#title {
+  color: $text-dark;  
+  font-family: $font-hand;
+  font-size: $font-big;
+  line-height: 1rem;
+  text-overflow: ellipsis;
+  // overflow:scroll;
+  white-space: nowrap;
+  margin-bottom: 2rem;
+  @media (max-width: $mobile-font-width-threshold) {
+    font-size: $mobile-font-big;
+    line-height: 2rem;
+    overflow:visible;
+    white-space:normal;
+    margin-bottom: .5rem;
+  }
+}
+#task_due {
   h2 {
     color: $text-dark;
     font-family: $font;
@@ -98,9 +88,9 @@ table {
 }
 
 
-.task_description {
+#task_description {
   p {
-    color: $text-dark;
+    color: $text-dark !important;
     font-family: $font;
     font-size: $font-small;
     line-height: $font-reg;
@@ -112,7 +102,6 @@ table {
     font-size: $mobile-font-small; 
     line-height: $mobile-font-small;
   }
-  
 }
 
 
