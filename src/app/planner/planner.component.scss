@@ -20,15 +20,17 @@ $mobile-font-small: 1rem;
 
     padding-top: 2%;
     padding-bottom: 2%;
-   
 
     h1 {
         color: $text-dark;
         font-family: $font;
         font-weight: 300;
-        font-size: $font-big
+        font-size: $font-big;
         // overflow: hidden;
         // white-space: nowrap;
+        @media (max-width: $mobile-font-width-threshold) {
+            font-size: $mobile-font-reg;
+        }
     }
   
     :focus ,.mat-expansion-panel-header.mat-expanded {
@@ -37,22 +39,11 @@ $mobile-font-small: 1rem;
         h1 { 
             font-size: $font-xl;
             font-family: $font-hand;
-        }
-    }
-
-    @media (max-width: $mobile-font-width-threshold) {
-        h1 {
-            font-size: $mobile-font-reg;
-        }
-
-        :focus ,.mat-expansion-panel-header.mat-expanded {
-            h1 { 
+            @media (max-width: $mobile-font-width-threshold) {
                 font-size: $mobile-font-big;
-            }
+            } 
         }
-
     }
-
 }
 
 .planner_goal {
@@ -77,12 +68,10 @@ $mobile-font-small: 1rem;
         line-height: $font-reg;
         font-weight: 600;
         text-align: right;
-    }
-    @media (max-width: $mobile-font-width-threshold) {
-        h2 {
+        @media (max-width: $mobile-font-width-threshold) {
             font-size: $mobile-font-reg;
             line-height: $mobile-font-reg;
             font-weight: 400;
-        }
-    } 
+        } 
+    }   
 }

@@ -1,11 +1,12 @@
 <mat-expansion-panel class="{{BETA_STATUS_CODES.get(task.status)?.css}}_stylebody">
-                
-    <mat-expansion-panel-header class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
+    
+    <div  class="{{BETA_STATUS_CODES.get(task.status)?.css}}"></div>
+    <mat-expansion-panel-header>
         <mat-panel-title>
-            <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}_text">
+            <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
                 {{ task.title }}</p></mat-panel-title>
         <mat-panel-description *ngIf="task.dueDate != undefined">
-            <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}_text">
+            <p class="{{BETA_STATUS_CODES.get(task.status)?.css}}">
                 {{ task.dueDate.toDateString() }}</p></mat-panel-description>       
     </mat-expansion-panel-header>
 

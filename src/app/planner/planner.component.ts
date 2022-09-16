@@ -92,7 +92,7 @@ export class PlannerComponent implements OnInit {
     
     request['planner-name'] = PLANNER_NAME
 
-    if (PLANNER_GOAL.length > 0) {
+    if ((PLANNER_GOAL||[]).length > 0) {
       request['planner-goal'] = PLANNER_GOAL
     } 
 
