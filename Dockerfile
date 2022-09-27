@@ -8,4 +8,4 @@ RUN npm install
 RUN npm run build --prod
 #stage 2
 FROM --platform=x86-64 nginx:alpine
-COPY --from=node /app/dist/task-app-angular /usr/share/nginx/html
+COPY --from=node /app/dist/task-app-ng /usr/share/nginx/html

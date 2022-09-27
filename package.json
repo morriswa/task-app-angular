@@ -1,6 +1,6 @@
 {
-  "name": "task-app-angular",
-  "version": "1.2.0",
+  "name": "task-app-ng",
+  "version": "1.2.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

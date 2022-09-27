@@ -16,6 +16,7 @@
     </div>
 
     <div *ngIf="task.dueDate != undefined" id="task_due">
+        <h2 *ngIf="task.startDate != undefined">Started on {{task.startDate.toDateString() }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) < 2)">Due on {{ task.dueDate.toDateString() }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 2) && task.completedDate!= undefined">Completed on {{ task.completedDate.toDateString() }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 3)">Expired on {{ task.dueDate.toDateString() }}</h2>

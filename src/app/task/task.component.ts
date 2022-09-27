@@ -133,9 +133,9 @@ export class TaskComponent implements OnInit,AfterViewInit {
         let newtaskarray = Array.from(planner.tasks);
        
         newtaskarray.forEach(task => {
-          task.startDate = (task.startDate != undefined && task.startDate != null)? new Date(task.startDate) : undefined;
-          task.dueDate = (task.dueDate != undefined && task.dueDate != null)? new Date(task.dueDate) : undefined;
-          task.completedDate = (task.completedDate != undefined && task.completedDate != null)? new Date(task.completedDate) : undefined;
+          task.startDate = (task.startDate != undefined)? new Date(task.startDate) : undefined;
+          task.dueDate = (task.dueDate != undefined)? new Date(task.dueDate) : undefined;
+          task.completedDate = (task.completedDate != undefined)? new Date(task.completedDate) : undefined;
         });
 
         newtaskarray.sort((a,b)=>{
@@ -204,8 +204,8 @@ export class TaskComponent implements OnInit,AfterViewInit {
     let TASK_DETAILS: string = this.taskForm.get("task-details")?.value;
     let TASK_STATUS: string = this.taskForm.get("task-status")?.value;
     let TASK_TYPE: string = this.taskForm.get("task-type")?.value;
-    let START_DATE: Date | null = this.taskForm.get("task-start-date")?.value;
-    let DUE_DATE: Date | null = this.taskForm.get("task-due-date")?.value;
+    let START_DATE: Date | undefined = this.taskForm.get("task-start-date")?.value;
+    let DUE_DATE: Date | undefined = this.taskForm.get("task-due-date")?.value;
 
     let request: CustomRequest = {
       "task-name" : TASK_NAME,
@@ -228,16 +228,14 @@ export class TaskComponent implements OnInit,AfterViewInit {
       request['task-type'] = TASK_TYPE;
     }
 
-    if (START_DATE != null && START_DATE != undefined) {
-      request['start-year'] = START_DATE.getFullYear();
-      request['start-month'] = START_DATE.getMonth();
-      request['start-day'] = START_DATE.getDate();
+    if (START_DATE != undefined) {
+      START_DATE.setHours(0,0)
+      request['start-greg'] = START_DATE.getTime();
     }
 
-    if (DUE_DATE != null && DUE_DATE != undefined) {
-      request['due-year'] = DUE_DATE.getFullYear();
-      request['due-month'] = DUE_DATE.getMonth();
-      request['due-day'] = DUE_DATE.getDate();
+    if (DUE_DATE != undefined) {
+      DUE_DATE.setHours(23,59)
+      request['due-greg'] = DUE_DATE.getTime();
     }
 
     this.http.post<Planner>(environment.api + "task/add",request,{
@@ -278,9 +276,9 @@ export class TaskComponent implements OnInit,AfterViewInit {
     let TASK_DETAILS: string = this.taskForm.get("task-details")?.value;
     let TASK_STATUS: string = this.taskForm.get("task-status")?.value;
     let TASK_TYPE: string = this.taskForm.get("task-type")?.value;
-    let START_DATE: Date | null = this.taskForm.get("task-start-date")?.value;
-    let DUE_DATE: Date | null = this.taskForm.get("task-due-date")?.value;
-    let COMPLETED_DATE: Date | null = this.taskForm.get("task-complete-date")?.value;
+    let START_DATE: Date | undefined = this.taskForm.get("task-start-date")?.value;
+    let DUE_DATE: Date | undefined = this.taskForm.get("task-due-date")?.value;
+    let COMPLETED_DATE: Date | undefined = this.taskForm.get("task-complete-date")?.value;
 
     let request: CustomRequest = {
       "planner-id" : this.PLANNER_ID,
@@ -307,22 +305,18 @@ export class TaskComponent implements OnInit,AfterViewInit {
       request['task-type'] = TASK_TYPE;
     }
 
-    if (START_DATE != null) {
-      request['start-year'] = START_DATE.getFullYear();
-      request['start-month'] = START_DATE.getMonth();
-      request['start-day'] = START_DATE.getDate();
+    if (START_DATE != undefined) {
+      START_DATE.setHours(0,0)
+      request['start-greg'] = START_DATE.getTime();
     }
 
-    if (DUE_DATE != null) {
-      request['due-year'] = DUE_DATE.getFullYear();
-      request['due-month'] = DUE_DATE.getMonth();
-      request['due-day'] = DUE_DATE.getDate();
+    if (DUE_DATE != undefined) {
+      DUE_DATE.setHours(23,59)
+      request['due-greg'] = DUE_DATE.getTime();
     }
 
-    if (COMPLETED_DATE != null) {
-      request['finish-year'] = COMPLETED_DATE.getFullYear();
-      request['finish-month'] = COMPLETED_DATE.getMonth();
-      request['finish-day'] = COMPLETED_DATE.getDate();
+    if (COMPLETED_DATE != undefined) {
+      request['finish-greg'] = COMPLETED_DATE.getTime();
     }
 
     this.http.patch<Planner>(environment.api + "task/update",request,{
@@ -340,7 +334,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
   }
 
   completeTask(taskId:number) {
-    let COMPLETED_DATE: Date | null = this.taskForm.get("task-complete-date")?.value;
+    let COMPLETED_DATE: Date | undefined = this.taskForm.get("task-complete-date")?.value;
 
     let request: CustomRequest = {
       "planner-id" : this.PLANNER_ID,
@@ -349,10 +343,8 @@ export class TaskComponent implements OnInit,AfterViewInit {
 
     request['task-status'] = "COMPLETED";
 
-    if (COMPLETED_DATE != null) {
-      request['finish-year'] = COMPLETED_DATE.getFullYear();
-      request['finish-month'] = COMPLETED_DATE.getMonth();
-      request['finish-day'] = COMPLETED_DATE.getDate();
+    if (COMPLETED_DATE != undefined) {
+      request['finish-greg'] = COMPLETED_DATE.getTime();
     }
 
     this.http.patch<Planner>(environment.api + "task/update",request,{

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +6,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'task-app-angular';
+  title = 'task-app-ng';
 
   constructor() {}
 
