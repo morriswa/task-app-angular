@@ -238,7 +238,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
       request['due-greg'] = DUE_DATE.getTime();
     }
 
-    this.http.post<Planner>(environment.api + "task/add",request,{
+    this.http.post<Planner>(environment.api + "task",request,{
       headers : {
         "email" : this.EMAIL
       }
@@ -254,7 +254,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
 
   deleteTask(taskId:number) {
     let TASK_ID = taskId;
-    this.http.delete<Planner>(environment.api + "task/del",{
+    this.http.delete<Planner>(environment.api + "task",{
       headers : {
         "email" : this.EMAIL
       }, body : {
@@ -319,7 +319,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
       request['finish-greg'] = COMPLETED_DATE.getTime();
     }
 
-    this.http.patch<Planner>(environment.api + "task/update",request,{
+    this.http.patch<Planner>(environment.api + "task",request,{
       headers : {
         "email" : this.EMAIL
       }
@@ -347,7 +347,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
       request['finish-greg'] = COMPLETED_DATE.getTime();
     }
 
-    this.http.patch<Planner>(environment.api + "task/update",request,{
+    this.http.patch<Planner>(environment.api + "task",request,{
       headers : {
         "email" : this.EMAIL
       }

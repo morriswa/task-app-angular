@@ -47,7 +47,7 @@ export class PlannerComponent implements OnInit {
   // }
 
   getPlanners(): void {
-    this.planners$ = this.http.get<Planner[]>(environment.api + "planner/all",{
+    this.planners$ = this.http.get<Planner[]>(environment.api + "planners",{
       headers : {
         "email" : this.EMAIL
       }
@@ -75,7 +75,7 @@ export class PlannerComponent implements OnInit {
 
   // FUNCTIONS
   registerNewUserRequest(): void {
-    this.http.post(environment.api + "login/register",{},{
+    this.http.post(environment.api + "login",{},{
       headers: {
         "email" : this.EMAIL
       }
@@ -85,8 +85,8 @@ export class PlannerComponent implements OnInit {
   newPlannerRequest(): void {
     let PLANNER_NAME: string = this.plannerFormField.get("planner-name")?.value;
     let PLANNER_GOAL: string = this.plannerFormField.get("planner-goal")?.value;
-    let PLANNER_START: Date | null = this.plannerFormField.get("planner-start-date")?.value;
-    let PLANNER_FINISH: Date | null = this.plannerFormField.get("planner-end-date")?.value;
+    let PLANNER_START: Date | undefined = this.plannerFormField.get("planner-start-date")?.value;
+    let PLANNER_FINISH: Date | undefined = this.plannerFormField.get("planner-end-date")?.value;
 
     let request: CustomRequest = {};
     
@@ -96,19 +96,16 @@ export class PlannerComponent implements OnInit {
       request['planner-goal'] = PLANNER_GOAL
     } 
 
-    if (PLANNER_START != null) {
-      request['start-year'] = PLANNER_START.getFullYear();
-      request['start-month'] = PLANNER_START.getMonth();
-      request['start-day'] = PLANNER_START.getDate();
+    if (PLANNER_START != undefined) {
+      request['start-greg'] = PLANNER_START.getTime();
     }
 
-    if (PLANNER_FINISH != null) {
-      request['finish-year'] = PLANNER_FINISH.getFullYear();
-      request['finish-month'] = PLANNER_FINISH.getMonth();
-      request['finish-day'] = PLANNER_FINISH.getDate();
+    if (PLANNER_FINISH != undefined) {
+      request['finish-greg'] = PLANNER_FINISH.getTime();
+
     }
 
-    this.http.post<Planner[]>(environment.api + "planner/add",request,{
+    this.http.post<Planner[]>(environment.api + "planner",request,{
       headers : {
         "email" : this.EMAIL
       }
@@ -124,8 +121,8 @@ export class PlannerComponent implements OnInit {
   updatePlanner(id:number) {
     let PLANNER_NAME: string = this.plannerFormField.get("planner-name")?.value;
     let PLANNER_GOAL: string = this.plannerFormField.get("planner-goal")?.value;
-    let PLANNER_START: Date | null = this.plannerFormField.get("planner-start-date")?.value;
-    let PLANNER_FINISH: Date | null = this.plannerFormField.get("planner-end-date")?.value;
+    let PLANNER_START: Date | undefined = this.plannerFormField.get("planner-start-date")?.value;
+    let PLANNER_FINISH: Date | undefined = this.plannerFormField.get("planner-end-date")?.value;
 
     let request: CustomRequest = {
       "planner-id" : id
@@ -139,19 +136,15 @@ export class PlannerComponent implements OnInit {
       request['planner-goal'] = PLANNER_GOAL
     } 
 
-    if (PLANNER_START != null) {
-      request['start-year'] = PLANNER_START.getFullYear();
-      request['start-month'] = PLANNER_START.getMonth();
-      request['start-day'] = PLANNER_START.getDate();
+    if (PLANNER_START != undefined) {
+      request['start-greg'] = PLANNER_START.getTime();
     }
 
-    if (PLANNER_FINISH != null) {
-      request['finish-year'] = PLANNER_FINISH.getFullYear();
-      request['finish-month'] = PLANNER_FINISH.getMonth();
-      request['finish-day'] = PLANNER_FINISH.getDate();
+    if (PLANNER_FINISH != undefined) {
+      request['finish-greg'] = PLANNER_FINISH.getTime();
     }
 
-    this.http.patch<Planner[]>(environment.api + "planner/update",request,{
+    this.http.patch<Planner[]>(environment.api + "planner",request,{
       headers : {
         "email" : this.EMAIL
       }
@@ -165,7 +158,7 @@ export class PlannerComponent implements OnInit {
   }
 
   deletePlanner(plannerIdToDel:number) {
-    this.http.delete<Planner[]>(environment.api + "planner/del",{
+    this.http.delete<Planner[]>(environment.api + "planner",{
       headers : {
         "email" : this.EMAIL
       }, body : {
