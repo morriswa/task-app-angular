@@ -12,6 +12,7 @@ import {AfterViewInit} from '@angular/core';
 import { TaskStatus } from '../interface/task-status';
 import { lastValueFrom, map, Observable, of } from 'rxjs';
 import { TaskDetailsComponent } from '../task-details/task-details.component';
+import { Time } from '@angular/common';
 
 export interface StylePropertyObject {
   friendly : string;
@@ -108,6 +109,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
       "task-start-date" : undefined,
       "task-due-date" : undefined,
       "task-complete-date" : undefined,
+      "task-due-time" : undefined,
       "task-status" : "",
       "task-type" : ""
     });
@@ -206,6 +208,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
     let TASK_TYPE: string = this.taskForm.get("task-type")?.value;
     let START_DATE: Date | undefined = this.taskForm.get("task-start-date")?.value;
     let DUE_DATE: Date | undefined = this.taskForm.get("task-due-date")?.value;
+    let DUE_TIME: string = this.taskForm.get("task-due-time")?.value;
 
     let request: CustomRequest = {
       "task-name" : TASK_NAME,
@@ -234,7 +237,12 @@ export class TaskComponent implements OnInit,AfterViewInit {
     }
 
     if (DUE_DATE != undefined) {
-      DUE_DATE.setHours(23,59)
+      if ((DUE_TIME || []).length > 0) {
+        DUE_DATE.setHours(Number(DUE_TIME.substring(0,2)),Number(DUE_TIME.substring(3,5)))
+      } else {
+        DUE_DATE.setHours(23,59)
+      }
+
       request['due-greg'] = DUE_DATE.getTime();
     }
 
@@ -270,7 +278,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
     });
   }
 
-  updateTask(taskId:number) {
+  updateTask(taskId:number,dueDate?:Date) {
     let TASK_NAME: string = this.taskForm.get("task-name")?.value;
     let TASK_CATEGORY: string = this.taskForm.get("task-category")?.value;
     let TASK_DETAILS: string = this.taskForm.get("task-details")?.value;
@@ -279,6 +287,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
     let START_DATE: Date | undefined = this.taskForm.get("task-start-date")?.value;
     let DUE_DATE: Date | undefined = this.taskForm.get("task-due-date")?.value;
     let COMPLETED_DATE: Date | undefined = this.taskForm.get("task-complete-date")?.value;
+    let DUE_TIME: string = this.taskForm.get("task-due-time")?.value;
 
     let request: CustomRequest = {
       "planner-id" : this.PLANNER_ID,
@@ -310,8 +319,21 @@ export class TaskComponent implements OnInit,AfterViewInit {
       request['start-greg'] = START_DATE.getTime();
     }
 
-    if (DUE_DATE != undefined) {
-      DUE_DATE.setHours(23,59)
+    if ( DUE_DATE != undefined || (DUE_TIME || []).length > 0 ) {
+      if (DUE_DATE == undefined && dueDate != undefined) {
+        DUE_DATE = dueDate!
+      } 
+      
+      if (DUE_DATE == undefined) {
+        throw new Error('bad')
+      }
+
+      if ((DUE_TIME || []).length > 0) {
+        DUE_DATE.setHours(Number(DUE_TIME.substring(0,2)),Number(DUE_TIME.substring(3,5)))
+      } else if (dueDate != undefined) {
+        DUE_DATE.setHours(dueDate.getHours(),dueDate.getMinutes())
+      }
+
       request['due-greg'] = DUE_DATE.getTime();
     }
 

@@ -172,6 +172,12 @@
                 <mat-label>Due Date</mat-label>
                 <mat-datepicker #endDatePicker></mat-datepicker>
             </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Due Time</mat-label>
+                <input  matInput 
+                        type="time" name="task-due-time" 
+                        formControlName="task-due-time">
+            </mat-form-field>
             <mat-form-field>
                 <input  matInput 
                         [matDatepicker]="completeDatePicker" 

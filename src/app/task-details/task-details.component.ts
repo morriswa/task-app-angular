@@ -34,7 +34,7 @@ export class TaskDetailsComponent implements OnInit {
   }
 
   updateTask(taskId:number) {
-    this.functionCalls.updateTask(taskId);
+    this.functionCalls.updateTask(taskId,this.task.dueDate);
   }
 
   completeTask(taskId:number) {

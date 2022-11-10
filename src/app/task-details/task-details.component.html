@@ -4,7 +4,7 @@
         <mat-panel-title>
             <p>{{ task.title }}</p></mat-panel-title>
         <mat-panel-description *ngIf="task.dueDate != undefined">
-            <p > {{ task.dueDate.toDateString() }}</p></mat-panel-description>       
+            <p >{{task.dueDate.toLocaleDateString('en-US',{weekday:'short'}) }} - {{ task.dueDate.toLocaleDateString() }}</p></mat-panel-description>       
     </mat-expansion-panel-header>
 
     <h2 id="title">{{ task.title }}</h2>
@@ -16,10 +16,10 @@
     </div>
 
     <div *ngIf="task.dueDate != undefined" id="task_due">
-        <h2 *ngIf="task.startDate != undefined">Started on {{task.startDate.toDateString() }}</h2>
-        <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) < 2)">Due on {{ task.dueDate.toDateString() }}</h2>
-        <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 2) && task.completedDate!= undefined">Completed on {{ task.completedDate.toDateString() }}</h2>
-        <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 3)">Expired on {{ task.dueDate.toDateString() }}</h2>
+        <h2 *ngIf="task.startDate != undefined">Started on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{task.startDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
+        <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) < 2)">Due on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{ task.dueDate.toLocaleDateString('en-US',{dateStyle:'long'}) }} @ {{ task.dueDate.toLocaleTimeString('en-US',{timeStyle:'short'}) }}</h2>
+        <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 2) && task.completedDate!= undefined">Completed on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{ task.completedDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
+        <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 3)">Expired on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{ task.dueDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
     </div>
 
     <div    id="task_description" 
@@ -94,6 +94,14 @@
             <mat-label>Due Date</mat-label>
             <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Due Time</mat-label>
+            <input  matInput 
+                    type="time" name="task-due-time" 
+                    formControlName="task-due-time">
+        </mat-form-field>
+
         <mat-form-field>
             <input  matInput 
                     [matDatepicker]="completeDatePicker" 
@@ -103,6 +111,7 @@
             <mat-label>Completion Date</mat-label>
             <mat-datepicker #completeDatePicker></mat-datepicker>
         </mat-form-field>
+        
     </form>
 
     <mat-action-row>   

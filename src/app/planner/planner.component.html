@@ -11,8 +11,8 @@
             
         <div    class="dates_stylebody"
                 *ngIf="planner.startDate != undefined && planner.finishDate != undefined">
-            <h2 class="dates">From {{ planner.startDate.toDateString() }}</h2>
-            <h2 class="dates">To {{ planner.finishDate.toDateString() }}</h2>
+            <h2 class="dates">From {{ planner.startDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
+            <h2 class="dates">To {{ planner.finishDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
         </div>
         
 
