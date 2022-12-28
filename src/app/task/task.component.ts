@@ -12,7 +12,6 @@ import {AfterViewInit} from '@angular/core';
 import { TaskStatus } from '../interface/task-status';
 import { lastValueFrom, map, Observable, of } from 'rxjs';
 import { TaskDetailsComponent } from '../task-details/task-details.component';
-import { Time } from '@angular/common';
 
 export interface StylePropertyObject {
   friendly : string;
@@ -124,14 +123,18 @@ export class TaskComponent implements OnInit,AfterViewInit {
   }
 
   getTasks() {
-    this.taskobs$ = this.http.get<Planner>(environment.api + "planner",{
+    this.taskobs$ = this.http.get(environment.api + "planner",{
       headers : {
         "email" : this.EMAIL,
       } , params : {
         "planner_id" : this.PLANNER_ID
-      }
+      },
+      responseType:"text"
     }).pipe(
-      map(planner => {
+      map(obs => {
+        let response_obj = JSON.parse(obs);
+        console.log(response_obj['message'])
+        let planner:Planner = response_obj['planner']
         let newtaskarray = Array.from(planner.tasks);
        
         newtaskarray.forEach(task => {

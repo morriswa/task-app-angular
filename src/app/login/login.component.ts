@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 export class LoginComponent implements OnInit {
   public loginStatus$: Observable<boolean> = of(false);
   public email:string="";
-  
+  public APP_VERSION:string = environment.app_version
   constructor(private auth0: AuthService, private http: HttpClient) { }
 
   ngOnInit(): void {

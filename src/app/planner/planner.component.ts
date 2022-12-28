@@ -47,18 +47,22 @@ export class PlannerComponent implements OnInit {
   // }
 
   getPlanners(): void {
-    this.planners$ = this.http.get<Planner[]>(environment.api + "planners",{
+    this.planners$ = this.http.get(environment.api + "planners",{
       headers : {
         "email" : this.EMAIL
-      }
+      },
+      responseType:"text"
     }).pipe(
       map(obs => {
-        obs.forEach(planner => {
+        let response_obj = JSON.parse(obs);
+        console.log(response_obj['message'])
+        let planners = Object.assign(new Array<Planner>(), response_obj['planners']); 
+        planners.forEach((planner:Planner) => {
           planner.creationDate = (planner.creationDate != undefined && planner.creationDate != null)? new Date(planner.creationDate) : undefined;
           planner.startDate = (planner.startDate != undefined && planner.startDate != null)? new Date(planner.startDate) : undefined;
           planner.finishDate = (planner.finishDate != undefined && planner.finishDate != null)? new Date(planner.finishDate) : undefined;
         });
-        return Object.assign(new Array<Planner>(), obs); 
+        return planners;
       })
     );
 

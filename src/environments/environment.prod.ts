@@ -1,3 +1,5 @@
+import package_settings from '../../package.json'
+
 export const environment = {
   production: true,
   api : "https://api.tasks.morriswa.org/v2/",
@@ -5,5 +7,6 @@ export const environment = {
     "domain" : "morriswa-auth-prod.us.auth0.com",
     "clientId" : "BrgMAolsi3kcVaIdlDnSXUFxjzpVXOWP",
     "audience" : "https://api.tasks.morriswa.org/v2/"
-  }
+  },
+  app_version: package_settings.version
 };
