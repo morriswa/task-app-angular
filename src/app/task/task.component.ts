@@ -127,7 +127,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
       headers : {
         "email" : this.EMAIL,
       } , params : {
-        "planner_id" : this.PLANNER_ID
+        "id" : this.PLANNER_ID
       },
       responseType:"text"
     }).pipe(
