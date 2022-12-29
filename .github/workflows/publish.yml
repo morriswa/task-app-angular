@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: Build and Publish with Docker 
 
 on:
   push:
@@ -20,4 +20,4 @@ jobs:
     - name: Docker Build and Publish
       run: |
         docker build . -t morriswa/task-app-angular:${{ steps.package-version.outputs.current-version}}
-        ducker push morriswa/task-app-angular:${{ steps.package-version.outputs.current-version}}
+        docker push morriswa/task-app-angular:${{ steps.package-version.outputs.current-version}}
