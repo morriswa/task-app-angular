@@ -4,7 +4,7 @@ import { map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Planner } from 'src/app/interface/planner';
 import { Task } from 'src/app/interface/task';
-import { TaskStatus } from 'src/app/interface/task-status';
+import { TaskStatusEnum } from 'src/app/interface/task';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,6 @@ import { TaskStatus } from 'src/app/interface/task-status';
 export class TaskService {
   
   constructor(private http:HttpClient) { }
-
-
-  huh() {
-    return this.http.get("https://"+environment.auth.domain+"/userinfo").pipe(tap(res=>console.log(res)));
-  }
 
   // USER OPS
   newUser(email:string) {
@@ -87,9 +82,9 @@ export class TaskService {
         });
 
         newtaskarray.sort((a,b)=>{
-          if (TaskStatus[<keyof typeof TaskStatus> a.status] > TaskStatus[<keyof typeof TaskStatus> b.status]) {
+          if (TaskStatusEnum[<keyof typeof TaskStatusEnum> a.status] > TaskStatusEnum[<keyof typeof TaskStatusEnum> b.status]) {
             return 1
-          } else if (TaskStatus[<keyof typeof TaskStatus> a.status] < TaskStatus[<keyof typeof TaskStatus> b.status]) {
+          } else if (TaskStatusEnum[<keyof typeof TaskStatusEnum> a.status] < TaskStatusEnum[<keyof typeof TaskStatusEnum> b.status]) {
             return -1
           } else {
             return (a.dueDate != undefined && b.dueDate != undefined)? a.dueDate.getTime() - b.dueDate.getTime() : -1;

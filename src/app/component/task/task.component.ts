@@ -6,7 +6,7 @@ import { CustomRequest } from 'src/app/interface/request';
 import { Task } from 'src/app/interface/task';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {AfterViewInit} from '@angular/core';
-import { TaskStatus } from 'src/app/interface/task-status';
+import { TaskStatusEnum } from 'src/app/interface/task';
 import { lastValueFrom, map, Observable, of } from 'rxjs';
 import { TaskDetailsComponent } from 'src/app/component/task-details/task-details.component';
 import { TaskService } from 'src/app/service/task.service';
@@ -29,43 +29,43 @@ export class TaskComponent implements OnInit,AfterViewInit {
       status:new Map(
       [ ["BACKLOG",{
           "friendly" : "Backlog",
-          "precedence" : TaskStatus.BACKLOG,
+          "precedence" : TaskStatusEnum.BACKLOG,
           "css" : "OLD"}],
         ["PAST_DUE",{
           "friendly" : "Overdue",
-          "precedence" : TaskStatus.PAST_DUE,
+          "precedence" : TaskStatusEnum.PAST_DUE,
           "css" : "OLD"}],
         ["NEW",{
           "friendly" : "New",
-          "precedence" : TaskStatus.NEW,
+          "precedence" : TaskStatusEnum.NEW,
           "css" : "STARTED"}],
         ["STARTED",{
           "friendly" : "Started",
-          "precedence" : TaskStatus.STARTED,
+          "precedence" : TaskStatusEnum.STARTED,
           "css" : "STARTED"}],
         ["IN_PROGRESS",{
           "friendly" : "In Progress",
-          "precedence" : TaskStatus.IN_PROGRESS,
+          "precedence" : TaskStatusEnum.IN_PROGRESS,
           "css" : "STARTED"}],
         ["REVIEW",{
           "friendly" : "Review",
-          "precedence" : TaskStatus.REVIEW,
+          "precedence" : TaskStatusEnum.REVIEW,
           "css" : "REVIEW"}],
         ["COMPLETED",{
           "friendly" : "Complete",
-          "precedence" : TaskStatus.COMPLETED,
+          "precedence" : TaskStatusEnum.COMPLETED,
           "css" : "DONE"}],
         ["TURNED_IN",{
           "friendly" : "Submitted",
-          "precedence" : TaskStatus.TURNED_IN,
+          "precedence" : TaskStatusEnum.TURNED_IN,
           "css" : "DONE"}],
         ["CLOSED",{
           "friendly" : "Closed",
-          "precedence" : TaskStatus.CLOSED,
+          "precedence" : TaskStatusEnum.CLOSED,
           "css" : "DONE"}],
         ["EXPIRED",{
           "friendly" : "Expired",
-          "precedence" : TaskStatus.EXPIRED,
+          "precedence" : TaskStatusEnum.EXPIRED,
           "css" : "EXPIRED"}],
         ]),type:new Map(
           [ ["TASK","Task"],
@@ -157,7 +157,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch(property) {
         case 'dueDate': return item.dueDate!.getTime();
-        case 'status' : return (TaskStatus[<keyof typeof TaskStatus> item.status]);
+        case 'status' : return (TaskStatusEnum[<keyof typeof TaskStatusEnum> item.status]);
         default: return item.id;
       }
     };
@@ -165,7 +165,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
   }
 
   getTaskStatusCode(task:Task): number {
-    return TaskStatus[<keyof typeof TaskStatus> task.status];
+    return TaskStatusEnum[<keyof typeof TaskStatusEnum> task.status];
   }
 
 
