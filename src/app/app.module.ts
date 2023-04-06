@@ -30,7 +30,6 @@ import { MatButtonToggleModule} from '@angular/material/button-toggle';
 // APP
 import { environment } from 'src/environments/environment';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './component/login/login.component';
 import { PlannerComponent } from './component/planner/planner.component';
 import { TaskComponent } from './component/task/task.component';
 import { TaskDetailsComponent } from './component/task-details/task-details.component';
@@ -52,7 +51,6 @@ const AUTH0_CONFIG = {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     PlannerComponent,
     TaskComponent,
     TaskDetailsComponent 
