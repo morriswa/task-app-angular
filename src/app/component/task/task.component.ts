@@ -2,14 +2,14 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { CustomRequest } from '../interface/request';
-import { Task } from '../interface/task';
+import { CustomRequest } from 'src/app/interface/request';
+import { Task } from 'src/app/interface/task';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {AfterViewInit} from '@angular/core';
-import { TaskStatus } from '../interface/task-status';
+import { TaskStatus } from 'src/app/interface/task-status';
 import { lastValueFrom, map, Observable, of } from 'rxjs';
-import { TaskDetailsComponent } from '../task-details/task-details.component';
-import { TaskService } from '../task.service';
+import { TaskDetailsComponent } from 'src/app/component/task-details/task-details.component';
+import { TaskService } from 'src/app/service/task.service';
 
 export interface StylePropertyObject {
   friendly : string;
@@ -227,7 +227,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
   }
 
   deleteTask(taskId:number) {
-    this.tasks.deleteTask(this.EMAIL, this.PLANNER_ID, taskId)
+    this.tasks.deleteTask(this.PLANNER_ID, taskId)
     .subscribe({
       next : () => {
         this.getTasks();

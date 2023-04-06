@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Task } from '../interface/task';
+import { Task } from 'src/app/interface/task';
 import { StylePropertyObject, TaskComponent } from '../task/task.component';
 
 @Component({

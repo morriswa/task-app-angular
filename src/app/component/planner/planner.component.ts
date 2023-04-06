@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Planner } from '../interface/planner';
-import { CustomRequest } from '../interface/request';
+import { Planner } from 'src/app/interface/planner';
+import { CustomRequest } from 'src/app/interface/request';
+import { TaskService } from 'src/app/service/task.service';
 
 @Component({
   selector: 'app-planner',
@@ -22,7 +23,7 @@ export class PlannerComponent implements OnInit {
   @Input() public EMAIL:string="";
   public plannerFormField:FormGroup;
 
-  constructor(private http: HttpClient,private fb:FormBuilder) {
+  constructor(private taskService:TaskService,private fb:FormBuilder) {
     this.plannerFormField = this.fb.group({
       "planner-name" : "",
       "planner-goal" : "",
@@ -47,24 +48,7 @@ export class PlannerComponent implements OnInit {
   // }
 
   getPlanners(): void {
-    this.planners$ = this.http.get(environment.api + "planners",{
-      headers : {
-        "email" : this.EMAIL
-      },
-      responseType:"text"
-    }).pipe(
-      map(obs => {
-        let response_obj = JSON.parse(obs);
-        console.log(response_obj['message'])
-        let planners = Object.assign(new Array<Planner>(), response_obj['planners']); 
-        planners.forEach((planner:Planner) => {
-          planner.creationDate = (planner.creationDate != undefined && planner.creationDate != null)? new Date(planner.creationDate) : undefined;
-          planner.startDate = (planner.startDate != undefined && planner.startDate != null)? new Date(planner.startDate) : undefined;
-          planner.finishDate = (planner.finishDate != undefined && planner.finishDate != null)? new Date(planner.finishDate) : undefined;
-        });
-        return planners;
-      })
-    );
+    this.planners$ = this.taskService.getAllPlanners(this.EMAIL);
 
     this.planners$.subscribe({
       next : obs => {
@@ -79,11 +63,7 @@ export class PlannerComponent implements OnInit {
 
   // FUNCTIONS
   registerNewUserRequest(): void {
-    this.http.post(environment.api + "login",{},{
-      headers: {
-        "email" : this.EMAIL
-      }
-    }).subscribe(obs => console.log(obs));
+    this.taskService.newUser(this.EMAIL).subscribe(obs => console.log(obs));
   }
   
   newPlannerRequest(): void {
@@ -109,11 +89,7 @@ export class PlannerComponent implements OnInit {
 
     }
 
-    this.http.post<Planner[]>(environment.api + "planner",request,{
-      headers : {
-        "email" : this.EMAIL
-      }
-    }).subscribe({
+    this.taskService.newPlanner(request, this.EMAIL).subscribe({
       next: () => {
         this.getPlanners();
         this.editPlannerMode = false;
@@ -148,11 +124,7 @@ export class PlannerComponent implements OnInit {
       request.finishDate = PLANNER_FINISH.getTime();
     }
 
-    this.http.patch<Planner[]>(environment.api + "planner",request,{
-      headers : {
-        "email" : this.EMAIL
-      }
-    }).subscribe({
+    this.taskService.updatePlanner(request,this.EMAIL).subscribe({
       next: () => {
         this.getPlanners();
         this.editPlannerMode = false;
@@ -162,13 +134,8 @@ export class PlannerComponent implements OnInit {
   }
 
   deletePlanner(plannerIdToDel:number) {
-    this.http.delete<Planner[]>(environment.api + "planner",{
-      headers : {
-        "email" : this.EMAIL
-      }, body : {
-        "planner-id" : plannerIdToDel
-      }
-    }).subscribe({
+    this.taskService.deletePlanner(plannerIdToDel)
+    .subscribe({
       next: () => {
         this.getPlanners();
         this.editPlannerMode = false;
