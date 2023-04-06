@@ -27,4 +27,4 @@
         Let's get started!</button>
 
 <app-planner *ngIf="(loginStatus$|async)"
-             [EMAIL]="this.email"></app-planner>
+             [EMAIL]="(this.email|async)!"></app-planner>

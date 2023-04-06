@@ -20,7 +20,7 @@ export class PlannerComponent implements OnInit {
 
   
   // INIT
-  @Input() public EMAIL:string="";
+  @Input() public EMAIL!:string;
   public plannerFormField:FormGroup;
 
   constructor(private taskService:TaskService,private fb:FormBuilder) {
@@ -33,25 +33,14 @@ export class PlannerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getEmail();
     this.getPlanners();
   }
 
-  // getEmail(): void {
-  //   this.auth0.user$.subscribe({
-  //     next : (user) => this.EMAIL = user?.email!,
-  //     error : (err) => {
-  //       console.error(err);
-  //       setTimeout(() => this.getEmail(),5000);
-  //     }
-  //   });
-  // }
-
   getPlanners(): void {
-    this.planners$ = this.taskService.getAllPlanners(this.EMAIL);
+    this.planners$ = this.taskService.getAllPlanners(this.EMAIL!);
 
     this.planners$.subscribe({
-      next : obs => {
+      next : () => {
         this.LOADED_SUCCESSFULLY = true;
       }, error : err => {
         this.registerNewUserRequest();
@@ -60,10 +49,9 @@ export class PlannerComponent implements OnInit {
     })
   }
 
-
   // FUNCTIONS
   registerNewUserRequest(): void {
-    this.taskService.newUser(this.EMAIL).subscribe(obs => console.log(obs));
+    this.taskService.newUser(this.EMAIL!).subscribe(obs => console.log(obs));
   }
   
   newPlannerRequest(): void {
@@ -89,7 +77,7 @@ export class PlannerComponent implements OnInit {
 
     }
 
-    this.taskService.newPlanner(request, this.EMAIL).subscribe({
+    this.taskService.newPlanner(request, this.EMAIL!).subscribe({
       next: () => {
         this.getPlanners();
         this.editPlannerMode = false;
@@ -124,7 +112,7 @@ export class PlannerComponent implements OnInit {
       request.finishDate = PLANNER_FINISH.getTime();
     }
 
-    this.taskService.updatePlanner(request,this.EMAIL).subscribe({
+    this.taskService.updatePlanner(request,this.EMAIL!).subscribe({
       next: () => {
         this.getPlanners();
         this.editPlannerMode = false;

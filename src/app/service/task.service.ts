@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Planner } from 'src/app/interface/planner';
 import { Task } from 'src/app/interface/task';
@@ -13,21 +13,22 @@ export class TaskService {
   
   constructor(private http:HttpClient) { }
 
+
+  huh() {
+    return this.http.get("https://"+environment.auth.domain+"/userinfo").pipe(tap(res=>console.log(res)));
+  }
+
   // USER OPS
   newUser(email:string) {
-    return this.http.post(environment.api + "login",{},{
-      headers: {
-        "email" : email
-      }
+    return this.http.post(environment.api + "login",{
+      email:email
     });
   }
   
   // PLANNER OPS
   getAllPlanners(email:string) {
     return this.http.get<any>(environment.api + "planners",{
-      headers : {
-        "email" : email
-      },
+     
     }).pipe(
       map(response_obj => {
         console.log(response_obj['message'])

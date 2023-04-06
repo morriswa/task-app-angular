@@ -1,7 +1,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AuthService, User } from '@auth0/auth0-angular';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginComponent implements OnInit {
   public loginStatus$: Observable<boolean> = of(false);
-  public email:string="";
+  public email:Observable<string>=of("");
   public APP_VERSION:string = environment.app_version
   constructor(private auth0: AuthService, private http: HttpClient) { }
 
@@ -22,27 +22,13 @@ export class LoginComponent implements OnInit {
   getAuthState() {
     this.loginStatus$ = this.auth0.isAuthenticated$;
 
-    this.auth0.user$.subscribe({
-      next : sub => this.email = sub?.email!,
-      error : err => {
-        console.error(err);
-        setTimeout(() => this.getAuthState(),3000);
-      }});
+    this.email = this.auth0.user$.pipe(map(user=>user?.email!));
   }
 
   login() {
-    this.auth0.loginWithPopup();
+    this.auth0.loginWithRedirect();
   }
 
-  testLogin() {
-    this.http.get(environment.api + "login",{
-      headers : {
-        "email" : this.email
-      } , responseType : "text"
-    }).subscribe(obs => {
-      console.log(obs)
-    });
-  }
 
   logout() {
     this.auth0.logout();
