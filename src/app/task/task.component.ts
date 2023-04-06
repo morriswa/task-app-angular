@@ -1,10 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { environment } from 'src/environments/environment';
-import { Planner } from '../interface/planner';
 import { CustomRequest } from '../interface/request';
 import { Task } from '../interface/task';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
@@ -12,6 +9,7 @@ import {AfterViewInit} from '@angular/core';
 import { TaskStatus } from '../interface/task-status';
 import { lastValueFrom, map, Observable, of } from 'rxjs';
 import { TaskDetailsComponent } from '../task-details/task-details.component';
+import { TaskService } from '../task.service';
 
 export interface StylePropertyObject {
   friendly : string;
@@ -100,7 +98,8 @@ export class TaskComponent implements OnInit,AfterViewInit {
   displayedColumns: string[] = ['category','title', 'status', 'dueDate'];
   dataSource = new MatTableDataSource<Task>();
 
-  constructor(private http:HttpClient,private fb:FormBuilder,private _liveAnnouncer: LiveAnnouncer) { 
+  constructor(private fb:FormBuilder,private _liveAnnouncer: LiveAnnouncer,
+    private tasks:TaskService) { 
     this.taskForm = this.fb.group({
       "task-name" : "",
       "task-category" : "",
@@ -123,39 +122,7 @@ export class TaskComponent implements OnInit,AfterViewInit {
   }
 
   getTasks() {
-    this.taskobs$ = this.http.get(environment.api + "planner",{
-      headers : {
-        "email" : this.EMAIL,
-      } , params : {
-        "id" : this.PLANNER_ID
-      },
-      responseType:"text"
-    }).pipe(
-      map(obs => {
-        let response_obj = JSON.parse(obs);
-        console.log(response_obj['message'])
-        let planner:Planner = response_obj['planner']
-        let newtaskarray = Array.from(planner.tasks);
-       
-        newtaskarray.forEach(task => {
-          task.startDate = (task.startDate != undefined)? new Date(task.startDate) : undefined;
-          task.dueDate = (task.dueDate != undefined)? new Date(task.dueDate) : undefined;
-          task.completedDate = (task.completedDate != undefined)? new Date(task.completedDate) : undefined;
-        });
-
-        newtaskarray.sort((a,b)=>{
-          if (TaskStatus[<keyof typeof TaskStatus> a.status] > TaskStatus[<keyof typeof TaskStatus> b.status]) {
-            return 1
-          } else if (TaskStatus[<keyof typeof TaskStatus> a.status] < TaskStatus[<keyof typeof TaskStatus> b.status]) {
-            return -1
-          } else {
-            return (a.dueDate != undefined && b.dueDate != undefined)? a.dueDate.getTime() - b.dueDate.getTime() : -1;
-          } 
-        }); 
-
-        return newtaskarray;
-      })
-    );
+    this.taskobs$ = this.tasks.getTasks(this.PLANNER_ID);
     this.cats$ = this.taskobs$.pipe(
       map(obs => {
         let tasks = Array.from(obs);
@@ -213,30 +180,30 @@ export class TaskComponent implements OnInit,AfterViewInit {
     let DUE_DATE: Date | undefined = this.taskForm.get("task-due-date")?.value;
     let DUE_TIME: string = this.taskForm.get("task-due-time")?.value;
 
-    let request: CustomRequest = {
-      "task-name" : TASK_NAME,
-      "planner-id" : this.PLANNER_ID
+    let request: any = {
+      "title" : TASK_NAME,
+      "plannerId" : this.PLANNER_ID
     };
 
     if ((TASK_CATEGORY || []).length > 0) {
-      request['task-category'] = TASK_CATEGORY;
+      request['category'] = TASK_CATEGORY;
     }
 
     if ((TASK_DETAILS || []).length > 0) {
-      request['task-details'] = TASK_DETAILS;
+      request['details'] = TASK_DETAILS;
     }
 
     if ((TASK_STATUS || []).length > 0) {
-      request['task-status'] = TASK_STATUS;
+      request['status'] = TASK_STATUS;
     }
 
     if ((TASK_TYPE || []).length > 0) {
-      request['task-type'] = TASK_TYPE;
+      request['type'] = TASK_TYPE;
     }
 
     if (START_DATE != undefined) {
       START_DATE.setHours(0,0)
-      request['start-greg'] = START_DATE.getTime();
+      request['startDate'] = START_DATE.getTime();
     }
 
     if (DUE_DATE != undefined) {
@@ -246,15 +213,11 @@ export class TaskComponent implements OnInit,AfterViewInit {
         DUE_DATE.setHours(23,59)
       }
 
-      request['due-greg'] = DUE_DATE.getTime();
+      request['dueDate'] = DUE_DATE.getTime();
     }
 
-    this.http.post<Planner>(environment.api + "task",request,{
-      headers : {
-        "email" : this.EMAIL
-      }
-    }).subscribe({
-      next : obs => {
+    this.tasks.addTask(request,this.EMAIL).subscribe({
+      next : () => {
         this.getTasks();
         this.sortTaskTable();
         // this.ngOnInit();
@@ -264,16 +227,9 @@ export class TaskComponent implements OnInit,AfterViewInit {
   }
 
   deleteTask(taskId:number) {
-    let TASK_ID = taskId;
-    this.http.delete<Planner>(environment.api + "task",{
-      headers : {
-        "email" : this.EMAIL
-      }, body : {
-        "planner-id" : this.PLANNER_ID,
-        "task-id" : TASK_ID
-      }
-    }).subscribe({
-      next : obs => {
+    this.tasks.deleteTask(this.EMAIL, this.PLANNER_ID, taskId)
+    .subscribe({
+      next : () => {
         this.getTasks();
         this.sortTaskTable();
         this.taskEditMode = false;
@@ -293,33 +249,33 @@ export class TaskComponent implements OnInit,AfterViewInit {
     let DUE_TIME: string = this.taskForm.get("task-due-time")?.value;
 
     let request: CustomRequest = {
-      "planner-id" : this.PLANNER_ID,
-      "task-id" : taskId
+      plannerId : this.PLANNER_ID,
+      taskId : taskId
     };
 
     if ((TASK_NAME || []).length > 0) {
-      request['task-name'] = TASK_NAME;
+      request.title = TASK_NAME;
     }
 
     if ((TASK_CATEGORY || []).length > 0) {
-      request['task-category'] = TASK_CATEGORY;
+      request.category = TASK_CATEGORY;
     }
 
     if ((TASK_DETAILS || []).length > 0) {
-      request['task-details'] = TASK_DETAILS;
+      request.details = TASK_DETAILS;
     }
 
     if ((TASK_STATUS || []).length > 0) {
-      request['task-status'] = TASK_STATUS;
+      request.status = TASK_STATUS;
     }
 
     if ((TASK_TYPE || []).length > 0) {
-      request['task-type'] = TASK_TYPE;
+      request.type = TASK_TYPE;
     }
 
     if (START_DATE != undefined) {
       START_DATE.setHours(0,0)
-      request['start-greg'] = START_DATE.getTime();
+      request.startDate = START_DATE.getTime();
     }
 
     if ( DUE_DATE != undefined || (DUE_TIME || []).length > 0 ) {
@@ -337,19 +293,15 @@ export class TaskComponent implements OnInit,AfterViewInit {
         DUE_DATE.setHours(dueDate.getHours(),dueDate.getMinutes())
       }
 
-      request['due-greg'] = DUE_DATE.getTime();
+      request.dueDate = DUE_DATE.getTime();
     }
 
     if (COMPLETED_DATE != undefined) {
-      request['finish-greg'] = COMPLETED_DATE.getTime();
+      request.finishDate = COMPLETED_DATE.getTime();
     }
 
-    this.http.patch<Planner>(environment.api + "task",request,{
-      headers : {
-        "email" : this.EMAIL
-      }
-    }).subscribe({
-      next : obs => {
+    this.tasks.updateTask(request,this.EMAIL).subscribe({
+      next : () => {
         this.getTasks();
         this.taskForm.reset();
         this.sortTaskTable();
@@ -362,22 +314,18 @@ export class TaskComponent implements OnInit,AfterViewInit {
     let COMPLETED_DATE: Date | undefined = this.taskForm.get("task-complete-date")?.value;
 
     let request: CustomRequest = {
-      "planner-id" : this.PLANNER_ID,
-      "task-id" : taskId
+      plannerId: this.PLANNER_ID,
+      taskId: taskId
     };
 
-    request['task-status'] = "COMPLETED";
+    request.status = "COMPLETED";
 
     if (COMPLETED_DATE != undefined) {
-      request['finish-greg'] = COMPLETED_DATE.getTime();
+      request.finishDate = COMPLETED_DATE.getTime();
     }
 
-    this.http.patch<Planner>(environment.api + "task",request,{
-      headers : {
-        "email" : this.EMAIL
-      }
-    }).subscribe({
-      next : obs => {
+    this.tasks.completeTask(request,this.EMAIL).subscribe({
+      next : () => {
         this.getTasks();
         this.taskForm.reset();
         this.sortTaskTable();

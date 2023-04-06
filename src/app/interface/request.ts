@@ -1,23 +1,14 @@
 export interface CustomRequest {
-    "planner-name"? : string,
-    "planner-id"? : number,
-    "planner-goal"? : string,
-    "task-name"? : string,
-    "task-id"? : number,
-    "task-category"? : string,
-    "task-status"? : string,
-    "task-type"? : string,
-    "task-details"? : string,
-    "start-greg"? : number,
-    // "start-year"? : number,
-    // "start-month"? : number,
-    // "start-day"? : number,
-    "finish-greg"? : number,
-    // "finish-year"? : number,
-    // "finish-month"? : number,
-    // "finish-day"? : number,
-    "due-greg"?: number,
-    // "due-year"? : number,
-    // "due-month"? : number,
-    // "due-day"? : number
+    plannerId?:number
+    name?:string
+    goal?:string
+    startDate?:number
+    finishDate?:number
+    taskId?:number
+    title?:string
+    status?:string
+    type?:string
+    details?:string
+    category?:string
+    dueDate?:number
 }

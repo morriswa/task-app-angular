@@ -94,18 +94,18 @@ export class PlannerComponent implements OnInit {
 
     let request: CustomRequest = {};
     
-    request['planner-name'] = PLANNER_NAME
+    request['name'] = PLANNER_NAME
 
     if ((PLANNER_GOAL||[]).length > 0) {
-      request['planner-goal'] = PLANNER_GOAL
+      request['goal'] = PLANNER_GOAL
     } 
 
     if (PLANNER_START != undefined) {
-      request['start-greg'] = PLANNER_START.getTime();
+      request['startDate'] = PLANNER_START.getTime();
     }
 
     if (PLANNER_FINISH != undefined) {
-      request['finish-greg'] = PLANNER_FINISH.getTime();
+      request['finishDate'] = PLANNER_FINISH.getTime();
 
     }
 
@@ -129,23 +129,23 @@ export class PlannerComponent implements OnInit {
     let PLANNER_FINISH: Date | undefined = this.plannerFormField.get("planner-end-date")?.value;
 
     let request: CustomRequest = {
-      "planner-id" : id
+      plannerId : id
     };
     
     if ((PLANNER_NAME||[]).length > 0) {
-      request['planner-name'] = PLANNER_NAME;
+      request.name = PLANNER_NAME;
     } 
 
     if ((PLANNER_GOAL||[]).length > 0) {
-      request['planner-goal'] = PLANNER_GOAL
+      request.goal = PLANNER_GOAL
     } 
 
     if (PLANNER_START != undefined) {
-      request['start-greg'] = PLANNER_START.getTime();
+      request.startDate = PLANNER_START.getTime();
     }
 
     if (PLANNER_FINISH != undefined) {
-      request['finish-greg'] = PLANNER_FINISH.getTime();
+      request.finishDate = PLANNER_FINISH.getTime();
     }
 
     this.http.patch<Planner[]>(environment.api + "planner",request,{

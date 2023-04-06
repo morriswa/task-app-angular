@@ -71,7 +71,7 @@ import { TaskDetailsComponent } from './task-details/task-details.component';
         audience: env.auth.audience,
   
         // Request this scope at user authentication time
-        scope: 'read:profile write:profile',
+        scope: 'develop:demo',
   
         // Specify configuration for the interceptor              
         httpInterceptor: { allowedList: [
@@ -83,7 +83,7 @@ import { TaskDetailsComponent } from './task-details/task-details.component';
               audience: env.auth.audience,
   
               // The attached token should have these scopes
-              scope: 'read:profile write:profile'
+              scope: 'develop:demo'
             }
           }
         ]}
