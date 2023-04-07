@@ -8,5 +8,6 @@ export const environment = {
     "clientId" : "BrgMAolsi3kcVaIdlDnSXUFxjzpVXOWP",
     "audience" : "https://api.tasks.morriswa.org/v2/"
   },
+  app_title: 'task-app-ng',
   app_version: package_settings.version
 };

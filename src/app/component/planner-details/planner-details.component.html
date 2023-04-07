@@ -1,0 +1,36 @@
+<mat-expansion-panel class="planners_stylebody">
+        
+    <mat-expansion-panel-header><h1>{{ planner.name }}</h1></mat-expansion-panel-header>
+    
+    <h2 class="planner_goal" *ngIf="(planner.goal||[]).length!=0">
+        Goal: {{ planner.goal }}
+    </h2>
+
+        
+    <div    class="dates_stylebody"
+            *ngIf="planner.startDate != undefined && planner.finishDate != undefined">
+        <h2 class="dates">From {{ planner.startDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
+        <h2 class="dates">To {{ planner.finishDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
+    </div>
+    
+
+    <app-task [PLANNER_ID]="planner.id"></app-task>
+
+
+    <mat-button-toggle-group    aria-label="Edit Mode"
+                                style="margin-top: 5%;">
+        <mat-button-toggle (click)="editPlannerMode = true">Edit Planner</mat-button-toggle>
+        <mat-button-toggle (click)="editPlannerMode = false">Close</mat-button-toggle>
+    </mat-button-toggle-group>
+
+
+    <div *ngIf="editPlannerMode">
+   
+    <app-planner-form [plannerForm]="plannerForm"></app-planner-form>
+    <mat-action-row>               
+        <button mat-button (click)="funcs.updatePlanner(planner.id)">Save and Update!</button>
+        <button mat-raised-button (click)="funcs.deletePlanner(planner.id)">Delete {{ planner.name }}</button>
+    </mat-action-row>
+    </div>
+
+</mat-expansion-panel>

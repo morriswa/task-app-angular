@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { platformBrowser } from '@angular/platform-browser';
 
-import { PlannerComponent } from './planner.component';
+import { PlannerComponent } from './planner-menu.component';
 
 describe('TasksComponent', () => {
   let component: PlannerComponent;

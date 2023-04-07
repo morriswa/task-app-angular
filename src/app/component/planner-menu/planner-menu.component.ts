@@ -9,8 +9,8 @@ import { TaskService } from 'src/app/service/task.service';
 
 @Component({
   selector: 'app-planner',
-  templateUrl: './planner.component.html',
-  styleUrls: ['./planner.component.scss']
+  templateUrl: './planner-menu.component.html',
+  styleUrls: ['./planner-menu.component.scss']
 })
 export class PlannerComponent implements OnInit {
   // PUBLIC STATE
@@ -37,7 +37,7 @@ export class PlannerComponent implements OnInit {
   }
 
   getPlanners(): void {
-    this.planners$ = this.taskService.getAllPlanners(this.EMAIL!);
+    this.planners$ = this.taskService.getAllPlanners();
 
     this.planners$.subscribe({
       next : () => {
@@ -77,7 +77,7 @@ export class PlannerComponent implements OnInit {
 
     }
 
-    this.taskService.newPlanner(request, this.EMAIL!).subscribe({
+    this.taskService.newPlanner(request).subscribe({
       next: () => {
         this.getPlanners();
         this.editPlannerMode = false;
@@ -112,7 +112,7 @@ export class PlannerComponent implements OnInit {
       request.finishDate = PLANNER_FINISH.getTime();
     }
 
-    this.taskService.updatePlanner(request,this.EMAIL!).subscribe({
+    this.taskService.updatePlanner(request).subscribe({
       next: () => {
         this.getPlanners();
         this.editPlannerMode = false;

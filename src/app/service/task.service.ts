@@ -21,7 +21,7 @@ export class TaskService {
   }
   
   // PLANNER OPS
-  getAllPlanners(email:string) {
+  getAllPlanners() {
     return this.http.get<any>(environment.api + "planners",{
      
     }).pipe(
@@ -38,20 +38,12 @@ export class TaskService {
     );
   }
 
-  newPlanner(request:any, email:string) {
-    return this.http.post<Planner[]>(environment.api + "planner",request,{
-      headers : {
-        "email" : email
-      }
-    });
+  newPlanner(request:any) {
+    return this.http.post<Planner[]>(environment.api + "planner",request);
   }
 
-  updatePlanner(request:any, email:string) {
-    return this.http.patch<Planner[]>(environment.api + "planner",request,{
-      headers : {
-        "email" : email
-      }
-    });
+  updatePlanner(request:any) {
+    return this.http.patch<Planner[]>(environment.api + "planner",request);
   }
 
   deletePlanner(plannerIdToDel:number) {
@@ -95,28 +87,16 @@ export class TaskService {
     }));
   }
 
-  addTask(request:any,email:string) {
-    return this.http.post<Task[]>(environment.api + "task",request,{
-      headers : {
-        "email" : email
-      }
-    })
+  addTask(request:any) {
+    return this.http.post<Task[]>(environment.api + "task",request);
   }
 
   updateTask(request:any, email:string) {
-    return this.http.patch(environment.api + "task",request,{
-      headers : {
-        "email" : email
-      }
-    })
+    return this.http.patch(environment.api + "task",request);
   }
 
   completeTask(request:any, email:string) {
-    return this.http.patch(environment.api + "task",request,{
-      headers : {
-        "email" : email
-      }
-    })
+    return this.http.patch(environment.api + "task",request);
   }
   
   deleteTask(plannerId:number, taskId:number) {
@@ -127,5 +107,4 @@ export class TaskService {
       }
     });
   }
- 
 }

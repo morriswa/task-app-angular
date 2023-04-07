@@ -34,91 +34,13 @@
         <mat-button-toggle (click)="taskEditMode = false">Close</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <form [formGroup]="taskForm" *ngIf="taskEditMode">
-        <mat-form-field appearance="outline">
-            <mat-label>Rename</mat-label>
-            <input  matInput 
-                    [placeholder]="task.title" 
-                    type="text" 
-                    name="task-name" 
-                    formControlName="task-name">
-        </mat-form-field>
-            <mat-divider></mat-divider>
-        <mat-form-field appearance="outline">
-            <mat-label>Category</mat-label>
-            <input  matInput 
-                    [placeholder]="task.category" 
-                    type="text" name="task-category" 
-                    formControlName="task-category">
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
-            <mat-select matNativeControl formControlName="task-status">
-                <mat-option *ngFor="let enum of BETA_STATUS_CODES|keyvalue" 
-                            [value]="enum.key">{{ enum.value.friendly }}</mat-option>
-            </mat-select>
-        </mat-form-field> 
-        <mat-form-field appearance="outline">
-            <mat-label>Type</mat-label>
-            <mat-select matNativeControl formControlName="task-type">
-                <mat-option *ngFor="let enum of TASK_TYPE_CODES_MAP|keyvalue" 
-                            [value]="enum.key">{{ enum.value }}</mat-option>
-            </mat-select>
-        </mat-form-field> 
-            <mat-divider></mat-divider>
-        <mat-form-field appearance="fill" class="task_details_box">
-            <mat-label>Details</mat-label>
-            <textarea   matInput 
-                        placeholder="{{task.description}}"
-                        type="text" 
-                        name="task-details" 
-                        formControlName="task-details">
-            </textarea>
-        </mat-form-field>
-            <mat-divider></mat-divider>
-        <mat-form-field>
-            <input  matInput 
-                    [matDatepicker]="startDatePicker" 
-                    name="task-start-date" 
-                    formControlName="task-start-date">
-            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-            <mat-label>Task Start Date</mat-label>
-            <mat-datepicker #startDatePicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field>
-            <input  matInput
-                    [matDatepicker]="endDatePicker" 
-                    name="task-due-date" 
-                    formControlName="task-due-date">
-            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-            <mat-label>Due Date</mat-label>
-            <mat-datepicker #endDatePicker></mat-datepicker>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-            <mat-label>Due Time</mat-label>
-            <input  matInput 
-                    type="time" name="task-due-time" 
-                    formControlName="task-due-time">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input  matInput 
-                    [matDatepicker]="completeDatePicker" 
-                    name="task-complete-date" 
-                    formControlName="task-complete-date">
-            <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
-            <mat-label>Completion Date</mat-label>
-            <mat-datepicker #completeDatePicker></mat-datepicker>
-        </mat-form-field>
-        
-    </form>
+    <app-task-form [taskForm]="taskForm" *ngIf="taskEditMode"></app-task-form>
 
     <mat-action-row>   
-        <button mat-raised-button (click)="completeTask(task.id)">Mark as Completed Today</button> 
+        <button mat-raised-button (click)="functionCalls.completeTask(task.id)">Mark as Completed Today</button> 
         <div *ngIf="taskEditMode">
-        <button mat-raised-button (click)="updateTask(task.id)">Save and Update!</button> 
-        <button mat-button (click)="deleteTask(task.id)">Delete</button>
+        <button mat-raised-button (click)="functionCalls.updateTask(task.id)">Save and Update!</button> 
+        <button mat-button (click)="functionCalls.deleteTask(task.id)">Delete</button>
         </div>
     </mat-action-row>
 </mat-expansion-panel>

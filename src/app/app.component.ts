@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { Observable, map, of } from 'rxjs';
@@ -10,18 +9,18 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'task-app-ng';
+  public APP_TITLE = environment.app_title;
+  public APP_VERSION:string = environment.app_version;
 
   public loginStatus$: Observable<boolean> = of(false);
-  public email:Observable<string>=of("");
-  public APP_VERSION:string = environment.app_version;
+  public email$:Observable<string>=of("");
 
   constructor(private auth0: AuthService) { }
 
   ngOnInit(): void {
+    // get observables for required data from Auth Service
     this.loginStatus$ = this.auth0.isAuthenticated$;
-
-    this.email = this.auth0.user$.pipe(map(user=>user?.email!));
+    this.email$ = this.auth0.user$.pipe(map(user=>user?.email!));
   }
 
   login() {
@@ -33,6 +32,6 @@ export class AppComponent implements OnInit {
   }
 
   register() {
-    this.auth0.loginWithRedirect();
+    this.auth0.loginWithPopup();
   }
 }

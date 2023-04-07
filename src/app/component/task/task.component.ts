@@ -22,71 +22,10 @@ export interface StylePropertyObject {
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.scss']
 })
-export class TaskComponent implements OnInit,AfterViewInit {
-  // CRAP 
-  getCodeMaps(): { status:Map<String,StylePropertyObject>,type:Map<String,String> } {
-    return { 
-      status:new Map(
-      [ ["BACKLOG",{
-          "friendly" : "Backlog",
-          "precedence" : TaskStatusEnum.BACKLOG,
-          "css" : "OLD"}],
-        ["PAST_DUE",{
-          "friendly" : "Overdue",
-          "precedence" : TaskStatusEnum.PAST_DUE,
-          "css" : "OLD"}],
-        ["NEW",{
-          "friendly" : "New",
-          "precedence" : TaskStatusEnum.NEW,
-          "css" : "STARTED"}],
-        ["STARTED",{
-          "friendly" : "Started",
-          "precedence" : TaskStatusEnum.STARTED,
-          "css" : "STARTED"}],
-        ["IN_PROGRESS",{
-          "friendly" : "In Progress",
-          "precedence" : TaskStatusEnum.IN_PROGRESS,
-          "css" : "STARTED"}],
-        ["REVIEW",{
-          "friendly" : "Review",
-          "precedence" : TaskStatusEnum.REVIEW,
-          "css" : "REVIEW"}],
-        ["COMPLETED",{
-          "friendly" : "Complete",
-          "precedence" : TaskStatusEnum.COMPLETED,
-          "css" : "DONE"}],
-        ["TURNED_IN",{
-          "friendly" : "Submitted",
-          "precedence" : TaskStatusEnum.TURNED_IN,
-          "css" : "DONE"}],
-        ["CLOSED",{
-          "friendly" : "Closed",
-          "precedence" : TaskStatusEnum.CLOSED,
-          "css" : "DONE"}],
-        ["EXPIRED",{
-          "friendly" : "Expired",
-          "precedence" : TaskStatusEnum.EXPIRED,
-          "css" : "EXPIRED"}],
-        ]),type:new Map(
-          [ ["TASK","Task"],
-            ["ASSIGNMENT","Assignment"],
-            ["QUIZ","Quiz"],
-            ["TEST","Test"],
-            ["GRADED_ASSIGNMENT","Graded Assignment"],
-            ["PROJECT","Project"],
-            ["TASK_HOME_QUIZ","Take Home Quiz"],
-            ["TASK_HOME_TEST","Take Home Test"],
-        ])};
-  }
-  public BETA_STATUS_CODES: Map<String,StylePropertyObject> = this.getCodeMaps().status
-  public TASK_TYPE_CODES_MAP: Map<String,String> = this.getCodeMaps().type
-  @ViewChild(TaskDetailsComponent ) child !:any ;
-
-
+export class TaskComponent implements OnInit {
   // STATE
   public taskobs$: Observable<Task[]> = of([]);
   public cats$: Observable<string[]> = of([]);
-
 
   // INIT
   @Input() PLANNER_ID: number=0;
@@ -117,9 +56,6 @@ export class TaskComponent implements OnInit,AfterViewInit {
     this.getTasks();
   }
 
-  ngAfterViewInit() {
-    this.sortTaskTable();
-  }
 
   getTasks() {
     this.taskobs$ = this.tasks.getTasks(this.PLANNER_ID);
@@ -152,17 +88,17 @@ export class TaskComponent implements OnInit,AfterViewInit {
     }
   }
 
-  async sortTaskTable() {
-    this.dataSource = new MatTableDataSource(await lastValueFrom(this.taskobs$));
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      switch(property) {
-        case 'dueDate': return item.dueDate!.getTime();
-        case 'status' : return (TaskStatusEnum[<keyof typeof TaskStatusEnum> item.status]);
-        default: return item.id;
-      }
-    };
-    this.dataSource.sort = this.sort;
-  }
+  // async sortTaskTable() {
+  //   this.dataSource = new MatTableDataSource(await lastValueFrom(this.taskobs$));
+  //   this.dataSource.sortingDataAccessor = (item, property) => {
+  //     switch(property) {
+  //       case 'dueDate': return item.dueDate!.getTime();
+  //       case 'status' : return (TaskStatusEnum[<keyof typeof TaskStatusEnum> item.status]);
+  //       default: return item.id;
+  //     }
+  //   };
+  //   this.dataSource.sort = this.sort;
+  // }
 
   getTaskStatusCode(task:Task): number {
     return TaskStatusEnum[<keyof typeof TaskStatusEnum> task.status];
@@ -216,10 +152,9 @@ export class TaskComponent implements OnInit,AfterViewInit {
       request['dueDate'] = DUE_DATE.getTime();
     }
 
-    this.tasks.addTask(request,this.EMAIL).subscribe({
+    this.tasks.addTask(request).subscribe({
       next : () => {
         this.getTasks();
-        this.sortTaskTable();
         // this.ngOnInit();
         this.taskForm.reset();
       }, error : err => console.error(err)
@@ -231,7 +166,6 @@ export class TaskComponent implements OnInit,AfterViewInit {
     .subscribe({
       next : () => {
         this.getTasks();
-        this.sortTaskTable();
         this.taskEditMode = false;
       }, error : err => console.error(err)
     });
@@ -304,7 +238,6 @@ export class TaskComponent implements OnInit,AfterViewInit {
       next : () => {
         this.getTasks();
         this.taskForm.reset();
-        this.sortTaskTable();
         this.taskEditMode = false;
       }, error : err => console.error(err)
     }); 
@@ -328,7 +261,6 @@ export class TaskComponent implements OnInit,AfterViewInit {
       next : () => {
         this.getTasks();
         this.taskForm.reset();
-        this.sortTaskTable();
         this.taskEditMode = false;
       }, error : err => console.error(err)
     }); 

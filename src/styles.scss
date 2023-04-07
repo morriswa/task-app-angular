@@ -1,0 +1,269 @@
+/* You can add global styles to this file, and also import other style files */
+$text-dark: rgb(57, 57, 57);
+$text-light: rgb(118, 118, 118);
+$text-nearwhite: rgb(255, 249, 241);
+$font: 'Montserrat', sans-serif;
+// $font-hand: 'Amatic SC', cursive;
+$font-hand: $font;
+
+$font-xl: 7em;
+$font-big: 4rem;
+$font-reg: 2rem;
+$font-small: 1.5rem;
+
+$mobile-font-width-threshold: 800px;
+
+$mobile-font-big: 2.5rem;
+$mobile-font-reg: 1.5rem;
+$mobile-font-small: 1rem; 
+
+
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+html, body { 
+    height: 100%;
+}
+body { 
+
+    margin: 0; 
+    font-family: 'Amatic SC', cursive;
+
+    /* font-family: Roboto, "Helvetica Neue", sans-serif;  */
+}
+
+.planners_stylebody {
+
+    padding-top: 2%;
+    padding-bottom: 2%;
+
+    h1 {
+        color: $text-dark;
+        font-family: $font;
+        font-weight: 300;
+        font-size: $font-big;
+        // overflow: hidden;
+        // white-space: nowrap;
+        @media (max-width: $mobile-font-width-threshold) {
+            font-size: $mobile-font-reg;
+        }
+    }
+  
+    :focus ,.mat-expansion-panel-header.mat-expanded {
+        padding-top: 2%;
+        padding-bottom: 2%;
+        h1 { 
+            font-size: $font-xl;
+            font-family: $font-hand;
+            @media (max-width: $mobile-font-width-threshold) {
+                font-size: $mobile-font-big;
+            } 
+        }
+    }
+}
+
+
+
+.planner_goal {
+    font-family: $font-hand;
+    color: $text-dark;
+    font-weight: 600;
+    font-size: $font-reg;
+    line-height: $font-reg;
+    @media (max-width: $mobile-font-width-threshold) {
+        font-size: $mobile-font-reg;
+        line-height: $mobile-font-reg;
+        font-weight: 400;
+    } 
+}
+
+.dates_stylebody {
+    font-family: $font;
+    color: $text-dark;
+    // line-height: 1rem;
+    h2 {
+        font-size: $font-reg;
+        line-height: $font-reg;
+        font-weight: 600;
+        text-align: right;
+        @media (max-width: $mobile-font-width-threshold) {
+            font-size: $mobile-font-reg;
+            line-height: $mobile-font-reg;
+            font-weight: 400;
+        } 
+    }   
+}
+
+table {
+    width: 100%;
+  }
+  
+  .closed_task_text {
+    background-color: rgb(95, 173, 86);
+    p {
+      color: $text-nearwhite;
+      font-family: $font;
+      font-weight: 600;
+    }
+    &:focus {
+      background-color: rgb(228, 255, 225);
+      p {
+        color: $text-dark;
+      }
+    }
+    &:hover {
+      background-color: rgb(48, 132, 39) !important;
+    }
+  } 
+  
+  
+  #task_info {
+    h2 {
+      display: inline;
+      color: $text-light;
+      font-size: $font-small; 
+      text-align: left;
+      @media (max-width: $mobile-font-width-threshold) {
+        font-size: $mobile-font-small;
+      }
+    }
+  }
+  
+  #title {
+    color: $text-dark;  
+    font-family: $font-hand;
+    font-size: $font-big;
+    line-height: 1rem;
+    text-overflow: ellipsis;
+    // overflow:scroll;
+    white-space: nowrap;
+    margin-bottom: 2rem;
+    @media (max-width: $mobile-font-width-threshold) {
+      font-size: $mobile-font-big;
+      line-height: 2rem;
+      overflow:visible;
+      white-space:normal;
+      margin-bottom: .5rem;
+    }
+  }
+  #task_due {
+    h2 {
+      color: $text-dark;
+      font-family: $font;
+      font-size: $font-small;
+      // margin-top: 2rem;
+      text-align: right; 
+      font-weight: 600;
+      // text-decoration: underline;
+      @media (max-width: $mobile-font-width-threshold) {
+        font-size: $mobile-font-small;
+      }
+    }
+  }
+  
+  .task_details_box {
+    min-width: 75%; max-width: 800px;
+  }
+  
+  
+  #task_description {
+    p {
+      color: $text-dark !important;
+      font-family: $font;
+      font-size: $font-small;
+      line-height: $font-reg;
+      margin-left: 5%;
+      text-align: left; 
+    }
+    margin-bottom: 20px;
+    @media (max-width: $mobile-font-width-threshold) {
+      font-size: $mobile-font-small; 
+      line-height: $mobile-font-small;
+    }
+  }
+  
+  
+  // OLD
+  .OLD_stylebody {
+    background-color: rgb(255, 229, 239);
+    .mat-expansion-panel-header {
+      background-color: rgb(180, 67, 108) !important;
+      &:hover {
+        background-color: rgb(148, 36, 77) !important;  
+      }
+    }
+    p {
+      color: $text-nearwhite;
+      font-family: $font;
+      font-weight: 600;
+    }
+  }
+  
+  
+  // EXPIRED
+  .EXPIRED_stylebody {
+    background-color: rgb(238, 220, 255);
+    .mat-expansion-panel-header {
+      background-color: rgb(6, 81, 67) !important;
+      &:hover {
+        background-color: rgb(125, 59, 187) !important;
+      }
+    }
+    p {
+      color: $text-nearwhite;
+      font-family: $font;
+      font-weight: 600;
+    }
+  }
+  
+  // COMPLETED TURNED IN
+  .DONE_stylebody {
+    background-color: rgb(224, 255, 220);
+    .mat-expansion-panel-header {
+      background-color: rgb(95, 173, 86) !important;
+      &:hover {
+        background-color: rgb(48, 132, 39) !important;
+      }
+    } 
+    p {
+      color: $text-nearwhite;
+      font-family: $font;
+      font-weight: 600;
+    }
+  }
+   
+  
+  // NEW
+  .STARTED_stylebody {
+    .mat-expansion-panel-header {
+      background-color: rgb(255, 228, 92) !important;
+      &:hover {
+        background-color: rgb(255, 218, 34) !important;
+      }
+    }
+    background-color: rgb(255, 248, 212);
+    p{
+      color: $text-dark;
+      font-family: $font;
+      font-weight: 600;
+    }
+  }
+  
+  
+  // REVIEW
+  .REVIEW_stylebody {
+    background-color: rgb(207, 239, 255);
+    .mat-expansion-panel-header { 
+      background-color: rgb(247, 129, 84) !important;
+      &:hover {
+        background-color: rgb(255, 145, 102) !important;
+      }
+    }
+    p {
+      color: $text-nearwhite;
+      font-family: $font;
+      font-weight: 600;
+    }
+  }

@@ -58,136 +58,13 @@
 </mat-tab-group>
 
 <mat-accordion >
-    <mat-expansion-panel style="margin-top: 2rem">
-        <mat-expansion-panel-header>View Task Table</mat-expansion-panel-header> 
 
-        <table 
-            style="margin-bottom: 5%"
-            mat-table 
-            [dataSource]="dataSource" 
-            matSort
-            #taskTableSort="matSort" 
-            matSortChange="announceSortChange($event)"
-            class="mat-elevation-z8">
-
-        <!-- Position Column -->
-        <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by category">
-            Category
-            </th>
-            <td mat-cell *matCellDef="let element"> {{ element.category }} </td>
-        </ng-container>
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
-            Title
-            </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-        </ng-container>
-
-        <!-- Weight Column -->
-        <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by status">
-            Status
-            </th>
-            <td mat-cell *matCellDef="let element"> {{ BETA_STATUS_CODES.get(element.status)?.friendly }} </td>
-        </ng-container>
-
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="dueDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by due date">
-            Due Date
-            </th>
-            <td mat-cell *matCellDef="let element"> 
-                <p *ngIf="element.dueDate != undefined">
-                {{ (element.dueDate).toDateString() }} </p>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-
-        
-    </mat-expansion-panel>
     <mat-expansion-panel> <!-- ADD TASK-->
         <mat-expansion-panel-header>Add Task</mat-expansion-panel-header>
 
-        <form [formGroup]="taskForm">
-            <mat-form-field appearance="outline">
-                <mat-label>Task Name</mat-label>
-                <input  matInput 
-                        type="text" 
-                        name="task-name" 
-                        formControlName="task-name">
-            </mat-form-field>
-            <mat-divider></mat-divider>
-            <mat-form-field appearance="outline">
-                <mat-label>Category</mat-label>
-                <input  matInput 
-                        type="text" name="task-category" 
-                        formControlName="task-category">
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Status</mat-label>
-                <mat-select matNativeControl formControlName="task-status">
-                    <mat-option *ngFor="let enum of BETA_STATUS_CODES|keyvalue" 
-                                        [value]="enum.key">{{ enum.value.friendly }}</mat-option>
-                </mat-select>
-            </mat-form-field> 
-            <mat-form-field appearance="outline">
-                <mat-label>Type</mat-label>
-                <mat-select matNativeControl formControlName="task-type">
-                    <mat-option *ngFor="let enum of TASK_TYPE_CODES_MAP|keyvalue" 
-                                        [value]="enum.key">{{ enum.value }}</mat-option>
-                </mat-select>
-            </mat-form-field> 
-            <mat-divider></mat-divider>
-            <mat-form-field appearance="fill" class="task_details_box">
-                <mat-label>Details</mat-label>
-                <textarea   matInput 
-                            type="text" 
-                            name="task-details" 
-                            style="min-width: 100px; max-width: 500px; width: 100%;"
-                            formControlName="task-details">
-                </textarea>
-            </mat-form-field>
-            <mat-divider></mat-divider>
-            <mat-form-field>
-                <input  matInput 
-                        [matDatepicker]="startDatePicker" 
-                        name="task-start-date" 
-                        formControlName="task-start-date">
-                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-                <mat-label>Task Start Date</mat-label>
-                <mat-datepicker #startDatePicker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field>
-                <input  matInput
-                        [matDatepicker]="endDatePicker" 
-                        name="task-due-date" 
-                        formControlName="task-due-date">
-                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-                <mat-label>Due Date</mat-label>
-                <mat-datepicker #endDatePicker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Due Time</mat-label>
-                <input  matInput 
-                        type="time" name="task-due-time" 
-                        formControlName="task-due-time">
-            </mat-form-field>
-            <mat-form-field>
-                <input  matInput 
-                        [matDatepicker]="completeDatePicker" 
-                        name="task-complete-date" 
-                        formControlName="task-complete-date">
-                <mat-datepicker-toggle matSuffix [for]="completeDatePicker"></mat-datepicker-toggle>
-                <mat-label>Completion Date</mat-label>
-                <mat-datepicker #completeDatePicker></mat-datepicker>
-            </mat-form-field>
-        </form>
+        <app-task-form
+            [taskForm]="taskForm"
+            ></app-task-form>
 
         <mat-action-row>
             <button mat-raised-button (click)="addTaskRequest()">New Task</button>

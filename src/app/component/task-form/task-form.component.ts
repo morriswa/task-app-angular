@@ -1,19 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Task, TaskStatusEnum } from 'src/app/interface/task';
-import { StylePropertyObject, TaskComponent } from '../task/task.component';
+import { FormGroup } from '@angular/forms';
+import { TaskStatusEnum } from 'src/app/interface/task';
+
+export interface StylePropertyObject {
+  friendly : string;
+  precedence : number;
+  css : string;
+} 
 
 @Component({
-  selector: 'app-task-details',
-  templateUrl: './task-details.component.html',
-  styleUrls: ['./task-details.component.scss','../task/task.component.scss']
+  selector: 'app-task-form',
+  templateUrl: './task-form.component.html',
+  styleUrls: ['./task-form.component.scss']
 })
-export class TaskDetailsComponent implements OnInit {
-  @Input() functionCalls !: TaskComponent;
-  @Input() task!: Task;
-  @Input() taskForm!: FormGroup;
+export class TaskFormComponent implements OnInit {
 
-getCodeMaps(): { status:Map<String,StylePropertyObject>,type:Map<String,String> } {
+  // CRAP 
+  getCodeMaps(): { status:Map<String,StylePropertyObject>,type:Map<String,String> } {
     return { 
       status:new Map(
       [ ["BACKLOG",{
@@ -69,10 +72,12 @@ getCodeMaps(): { status:Map<String,StylePropertyObject>,type:Map<String,String> 
   }
   public BETA_STATUS_CODES: Map<String,StylePropertyObject> = this.getCodeMaps().status
   public TASK_TYPE_CODES_MAP: Map<String,String> = this.getCodeMaps().type
-  public taskEditMode:boolean = false;
-  
+
+  @Input() taskForm!:FormGroup;
+
   constructor() { }
 
   ngOnInit(): void {
   }
+
 }
