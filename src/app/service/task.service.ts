@@ -91,11 +91,11 @@ export class TaskService {
     return this.http.post<Task[]>(environment.api + "task",request);
   }
 
-  updateTask(request:any, email:string) {
+  updateTask(request:any) {
     return this.http.patch(environment.api + "task",request);
   }
 
-  completeTask(request:any, email:string) {
+  completeTask(request:any) {
     return this.http.patch(environment.api + "task",request);
   }
   

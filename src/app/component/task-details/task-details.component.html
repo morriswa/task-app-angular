@@ -34,7 +34,10 @@
         <mat-button-toggle (click)="taskEditMode = false">Close</mat-button-toggle>
     </mat-button-toggle-group>
 
-    <app-task-form [taskForm]="taskForm" *ngIf="taskEditMode"></app-task-form>
+    <app-task-form 
+        [taskForm]="taskForm" 
+        *ngIf="taskEditMode"
+        ></app-task-form>
 
     <mat-action-row>   
         <button mat-raised-button (click)="functionCalls.completeTask(task.id)">Mark as Completed Today</button> 

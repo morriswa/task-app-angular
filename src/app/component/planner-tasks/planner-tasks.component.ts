@@ -1,14 +1,9 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { CustomRequest } from 'src/app/interface/request';
 import { Task } from 'src/app/interface/task';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {AfterViewInit} from '@angular/core';
 import { TaskStatusEnum } from 'src/app/interface/task';
-import { lastValueFrom, map, Observable, of } from 'rxjs';
-import { TaskDetailsComponent } from 'src/app/component/task-details/task-details.component';
+import { map, Observable, of } from 'rxjs';
 import { TaskService } from 'src/app/service/task.service';
 
 export interface StylePropertyObject {
@@ -17,28 +12,28 @@ export interface StylePropertyObject {
   css : string;
 } 
 
+/**
+ * This component runs the Unique Task Menu located within every Planner
+ */
 @Component({
   selector: 'app-task',
-  templateUrl: './task.component.html',
-  styleUrls: ['./task.component.scss']
+  templateUrl: './planner-tasks.component.html',
+  styleUrls: ['./planner-tasks.component.scss']
 })
-export class TaskComponent implements OnInit {
+export class PlannerTasksComponent implements OnInit {
+  /**
+   * Required Planner ID to use in API calls
+   */
+  @Input() PLANNER_ID!: number;
+   
   // STATE
   public taskobs$: Observable<Task[]> = of([]);
   public cats$: Observable<string[]> = of([]);
-
-  // INIT
-  @Input() PLANNER_ID: number=0;
-  @Input() EMAIL: string="";
-  @ViewChild('taskTableSort') sort: MatSort = new MatSort();
+  public taskEditMode:boolean = false;
 
   public taskForm: FormGroup;
-  public taskEditMode:boolean = false;
-  displayedColumns: string[] = ['category','title', 'status', 'dueDate'];
-  dataSource = new MatTableDataSource<Task>();
 
-  constructor(private fb:FormBuilder,private _liveAnnouncer: LiveAnnouncer,
-    private tasks:TaskService) { 
+  constructor(private fb:FormBuilder, private tasks:TaskService) { 
     this.taskForm = this.fb.group({
       "task-name" : "",
       "task-category" : "",
@@ -56,7 +51,6 @@ export class TaskComponent implements OnInit {
     this.getTasks();
   }
 
-
   getTasks() {
     this.taskobs$ = this.tasks.getTasks(this.PLANNER_ID);
     this.cats$ = this.taskobs$.pipe(
@@ -73,39 +67,10 @@ export class TaskComponent implements OnInit {
     );
   }
 
-
-  // HELPERS 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
-
-  // async sortTaskTable() {
-  //   this.dataSource = new MatTableDataSource(await lastValueFrom(this.taskobs$));
-  //   this.dataSource.sortingDataAccessor = (item, property) => {
-  //     switch(property) {
-  //       case 'dueDate': return item.dueDate!.getTime();
-  //       case 'status' : return (TaskStatusEnum[<keyof typeof TaskStatusEnum> item.status]);
-  //       default: return item.id;
-  //     }
-  //   };
-  //   this.dataSource.sort = this.sort;
-  // }
-
   getTaskStatusCode(task:Task): number {
     return TaskStatusEnum[<keyof typeof TaskStatusEnum> task.status];
   }
 
-
-  // FUNCTIONS
   addTaskRequest() {
     let TASK_NAME: string = this.taskForm.get("task-name")?.value;
     let TASK_CATEGORY: string = this.taskForm.get("task-category")?.value;
@@ -121,28 +86,28 @@ export class TaskComponent implements OnInit {
       "plannerId" : this.PLANNER_ID
     };
 
-    if ((TASK_CATEGORY || []).length > 0) {
+    if (TASK_CATEGORY) {
       request['category'] = TASK_CATEGORY;
     }
 
-    if ((TASK_DETAILS || []).length > 0) {
+    if (TASK_DETAILS) {
       request['details'] = TASK_DETAILS;
     }
 
-    if ((TASK_STATUS || []).length > 0) {
+    if (TASK_STATUS) {
       request['status'] = TASK_STATUS;
     }
 
-    if ((TASK_TYPE || []).length > 0) {
+    if (TASK_TYPE) {
       request['type'] = TASK_TYPE;
     }
 
-    if (START_DATE != undefined) {
+    if (START_DATE) {
       START_DATE.setHours(0,0)
       request['startDate'] = START_DATE.getTime();
     }
 
-    if (DUE_DATE != undefined) {
+    if (DUE_DATE) {
       if ((DUE_TIME || []).length > 0) {
         DUE_DATE.setHours(Number(DUE_TIME.substring(0,2)),Number(DUE_TIME.substring(3,5)))
       } else {
@@ -152,12 +117,13 @@ export class TaskComponent implements OnInit {
       request['dueDate'] = DUE_DATE.getTime();
     }
 
-    this.tasks.addTask(request).subscribe({
+    this.tasks.addTask(request)
+    .subscribe({
       next : () => {
         this.getTasks();
-        // this.ngOnInit();
         this.taskForm.reset();
-      }, error : err => console.error(err)
+      }, 
+      error : err => console.error(err)
     });
   }
 
@@ -167,7 +133,8 @@ export class TaskComponent implements OnInit {
       next : () => {
         this.getTasks();
         this.taskEditMode = false;
-      }, error : err => console.error(err)
+      }, 
+      error : err => console.error(err)
     });
   }
 
@@ -187,32 +154,28 @@ export class TaskComponent implements OnInit {
       taskId : taskId
     };
 
-    if ((TASK_NAME || []).length > 0) {
+    if (TASK_NAME) 
       request.title = TASK_NAME;
-    }
 
-    if ((TASK_CATEGORY || []).length > 0) {
+    if (TASK_CATEGORY) 
       request.category = TASK_CATEGORY;
-    }
 
-    if ((TASK_DETAILS || []).length > 0) {
+    if (TASK_DETAILS) 
       request.details = TASK_DETAILS;
-    }
 
-    if ((TASK_STATUS || []).length > 0) {
+    if (TASK_STATUS) 
       request.status = TASK_STATUS;
-    }
-
-    if ((TASK_TYPE || []).length > 0) {
+    
+    if (TASK_TYPE) 
       request.type = TASK_TYPE;
-    }
 
-    if (START_DATE != undefined) {
+
+    if (START_DATE) {
       START_DATE.setHours(0,0)
       request.startDate = START_DATE.getTime();
     }
 
-    if ( DUE_DATE != undefined || (DUE_TIME || []).length > 0 ) {
+    if ( DUE_DATE || DUE_TIME ) {
       if (DUE_DATE == undefined && dueDate != undefined) {
         DUE_DATE = dueDate!
       } 
@@ -230,11 +193,11 @@ export class TaskComponent implements OnInit {
       request.dueDate = DUE_DATE.getTime();
     }
 
-    if (COMPLETED_DATE != undefined) {
+    if (COMPLETED_DATE) 
       request.finishDate = COMPLETED_DATE.getTime();
-    }
 
-    this.tasks.updateTask(request,this.EMAIL).subscribe({
+    this.tasks.updateTask(request)
+    .subscribe({
       next : () => {
         this.getTasks();
         this.taskForm.reset();
@@ -253,16 +216,17 @@ export class TaskComponent implements OnInit {
 
     request.status = "COMPLETED";
 
-    if (COMPLETED_DATE != undefined) {
+    if (COMPLETED_DATE) 
       request.finishDate = COMPLETED_DATE.getTime();
-    }
 
-    this.tasks.completeTask(request,this.EMAIL).subscribe({
+    this.tasks.completeTask(request)
+    .subscribe({
       next : () => {
         this.getTasks();
         this.taskForm.reset();
         this.taskEditMode = false;
-      }, error : err => console.error(err)
+      }, 
+      error : err => console.error(err)
     }); 
   }
 }

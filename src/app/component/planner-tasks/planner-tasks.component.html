@@ -6,7 +6,8 @@
                 <app-task-details   *ngIf="getTaskStatusCode(task) <= 1"
                                     [functionCalls]="this" 
                                     [task]="task"
-                                    [taskForm]="taskForm">
+                                    [taskForm]="taskForm"
+                                    >
                                 </app-task-details>
             </div>
 
@@ -18,7 +19,8 @@
                         <app-task-details   *ngIf="getTaskStatusCode(task) > 1"
                                             [functionCalls]="this" 
                                             [task]="task" 
-                                            [taskForm]="taskForm">
+                                            [taskForm]="taskForm"
+                                            >
                                         </app-task-details>
                     </div>
                 </mat-accordion></div>
@@ -35,6 +37,7 @@
                                         [functionCalls]="this" 
                                         [task]="task"
                                         [taskForm]="taskForm">
+                                        >
                                     </app-task-details>
                 </div>
     
@@ -46,7 +49,8 @@
                             <app-task-details   *ngIf="(getTaskStatusCode(task) > 1) && (task.category == tab)"
                                                 [functionCalls]="this" 
                                                 [task]="task" 
-                                                [taskForm]="taskForm">
+                                                [taskForm]="taskForm"
+                                                >
                                             </app-task-details>
                         </div>
                     </mat-accordion></div>

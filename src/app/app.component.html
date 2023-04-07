@@ -1,3 +1,4 @@
+<!-- App Header -->
 <mat-toolbar>
     <mat-toolbar-row>
         <mat-button mat-icon-button [matMenuTriggerFor]="loginMenu">
@@ -19,6 +20,7 @@
     </mat-toolbar-row>
 </mat-toolbar>
 
+<!-- Login/ Register Prompt -->
 <button 
     mat-raised-button 
     color="primary" 
@@ -27,8 +29,8 @@
     *ngIf="!(loginStatus$|async)"
     >Let's get started!</button>
 
-
-<app-planner 
+<!-- The Planner Menu gets loaded only after a User Authenticates -->
+<app-planner-menu 
     *ngIf="(loginStatus$|async)"
     [EMAIL]="(this.email$|async)!"
-    ></app-planner>
+    ></app-planner-menu>

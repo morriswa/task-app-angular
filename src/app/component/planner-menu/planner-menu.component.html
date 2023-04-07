@@ -4,7 +4,7 @@
         *ngFor="let planner of (planners$ | async)" 
         [planner]="planner"
         [plannerForm]="plannerFormField"
-        [editPlannerMode]="editPlannerMode"
+        [editPlannerMode]="EDITING_PLANNER"
         [funcs]="this"
         ></app-planner-details>
 

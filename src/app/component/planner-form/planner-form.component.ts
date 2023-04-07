@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
+/**
+ * Just a view for Add/Update Planner Forms
+ */
 @Component({
   selector: 'app-planner-form',
   templateUrl: './planner-form.component.html',

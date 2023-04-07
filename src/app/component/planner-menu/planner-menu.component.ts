@@ -7,20 +7,26 @@ import { Planner } from 'src/app/interface/planner';
 import { CustomRequest } from 'src/app/interface/request';
 import { TaskService } from 'src/app/service/task.service';
 
+/**
+ * A menu to manage and create of all a User's Planners
+ */
 @Component({
-  selector: 'app-planner',
+  selector: 'app-planner-menu',
   templateUrl: './planner-menu.component.html',
   styleUrls: ['./planner-menu.component.scss']
 })
 export class PlannerComponent implements OnInit {
-  // PUBLIC STATE
-  public editPlannerMode = false;
-  public planners$:Observable<Planner[]>=of([]);
+   /**
+   * Required string input of Authenticated User's Email
+   */
+   @Input() public EMAIL!:string;
+   
+  // STATE
+  public EDITING_PLANNER:boolean = false;
   public LOADED_SUCCESSFULLY:boolean = false;
 
-  
-  // INIT
-  @Input() public EMAIL!:string;
+  public planners$:Observable<Planner[]>=of([]);
+
   public plannerFormField:FormGroup;
 
   constructor(private taskService:TaskService,private fb:FormBuilder) {
@@ -40,18 +46,18 @@ export class PlannerComponent implements OnInit {
     this.planners$ = this.taskService.getAllPlanners();
 
     this.planners$.subscribe({
-      next : () => {
+      next : () => { // Load the Component if the API responds 200 status
         this.LOADED_SUCCESSFULLY = true;
-      }, error : err => {
+      }, error : () => { // else try to register the user and retry
         this.registerNewUserRequest();
         setTimeout(() => this.getPlanners(),2000);
       }
     })
   }
 
-  // FUNCTIONS
   registerNewUserRequest(): void {
-    this.taskService.newUser(this.EMAIL!).subscribe(obs => console.log(obs));
+    this.taskService.newUser(this.EMAIL!)
+    .subscribe(obs => console.log(obs));
   }
   
   newPlannerRequest(): void {
@@ -62,27 +68,25 @@ export class PlannerComponent implements OnInit {
 
     let request: CustomRequest = {};
     
-    request['name'] = PLANNER_NAME
+    request['name'] = PLANNER_NAME;
 
-    if ((PLANNER_GOAL||[]).length > 0) {
-      request['goal'] = PLANNER_GOAL
-    } 
+    if (PLANNER_GOAL) 
+      request['goal'] = PLANNER_GOAL;
 
-    if (PLANNER_START != undefined) {
+    if (PLANNER_START) 
       request['startDate'] = PLANNER_START.getTime();
-    }
 
-    if (PLANNER_FINISH != undefined) {
+    if (PLANNER_FINISH)
       request['finishDate'] = PLANNER_FINISH.getTime();
-
-    }
-
-    this.taskService.newPlanner(request).subscribe({
+    
+    this.taskService.newPlanner(request)
+    .subscribe({
       next: () => {
         this.getPlanners();
-        this.editPlannerMode = false;
+        this.EDITING_PLANNER = false;
         this.plannerFormField.reset();
-      },error: (err) => console.error(err)
+      },
+      error: (err) => console.error(err)
     }) 
   }
 
@@ -96,28 +100,26 @@ export class PlannerComponent implements OnInit {
       plannerId : id
     };
     
-    if ((PLANNER_NAME||[]).length > 0) {
+    if (PLANNER_NAME) 
       request.name = PLANNER_NAME;
-    } 
 
-    if ((PLANNER_GOAL||[]).length > 0) {
-      request.goal = PLANNER_GOAL
-    } 
-
-    if (PLANNER_START != undefined) {
+    if (PLANNER_GOAL) 
+      request.goal = PLANNER_GOAL;
+      
+    if (PLANNER_START) 
       request.startDate = PLANNER_START.getTime();
-    }
 
-    if (PLANNER_FINISH != undefined) {
+    if (PLANNER_FINISH) 
       request.finishDate = PLANNER_FINISH.getTime();
-    }
 
-    this.taskService.updatePlanner(request).subscribe({
+    this.taskService.updatePlanner(request)
+    .subscribe({
       next: () => {
         this.getPlanners();
-        this.editPlannerMode = false;
+        this.EDITING_PLANNER = false;
         this.plannerFormField.reset();
-      },error: (err) => console.error(err)
+      },
+      error: (err) => console.error(err)
     }) 
   }
 
@@ -126,7 +128,7 @@ export class PlannerComponent implements OnInit {
     .subscribe({
       next: () => {
         this.getPlanners();
-        this.editPlannerMode = false;
+        this.EDITING_PLANNER = false;
       }, error: (err) => console.error(err)
     }) 
   }

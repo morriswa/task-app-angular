@@ -36,32 +36,32 @@ body {
 
 .planners_stylebody {
 
-    padding-top: 2%;
-    padding-bottom: 2%;
+  padding-top: 2%;
+  padding-bottom: 2%;
 
-    h1 {
-        color: $text-dark;
-        font-family: $font;
-        font-weight: 300;
-        font-size: $font-big;
-        // overflow: hidden;
-        // white-space: nowrap;
-        @media (max-width: $mobile-font-width-threshold) {
-            font-size: $mobile-font-reg;
-        }
-    }
-  
-    :focus ,.mat-expansion-panel-header.mat-expanded {
-        padding-top: 2%;
-        padding-bottom: 2%;
-        h1 { 
-            font-size: $font-xl;
-            font-family: $font-hand;
-            @media (max-width: $mobile-font-width-threshold) {
-                font-size: $mobile-font-big;
-            } 
-        }
-    }
+  h1 {
+      color: $text-dark;
+      font-family: $font;
+      font-weight: 300;
+      font-size: $font-big;
+      // overflow: hidden;
+      // white-space: nowrap;
+      @media (max-width: $mobile-font-width-threshold) {
+          font-size: $mobile-font-reg;
+      }
+  }
+
+  :focus ,.mat-expansion-panel-header.mat-expanded {
+      padding-top: 2%;
+      padding-bottom: 2%;
+      h1 { 
+          font-size: $font-xl;
+          font-family: $font-hand;
+          @media (max-width: $mobile-font-width-threshold) {
+              font-size: $mobile-font-big;
+          } 
+      }
+  }
 }
 
 
