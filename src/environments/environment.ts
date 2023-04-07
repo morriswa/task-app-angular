@@ -11,7 +11,7 @@ export const environment = {
     "clientId" : "Wi9msBPJr0pr56mPWJy4FuSWwQKFVmAA",
     "audience" : "http://127.0.0.1:8081/v0",
   },
-  app_title: 'task-app-ng',
+  app_title: package_settings.name,
   app_version: package_settings.version
 };
 
