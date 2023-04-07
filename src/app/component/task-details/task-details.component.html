@@ -1,4 +1,4 @@
-<mat-expansion-panel class="{{BETA_STATUS_CODES.get(task.status)?.css}}_stylebody">
+<mat-expansion-panel class="task_menu_style_{{BETA_STATUS_CODES.get(task.status)?.css}}">
     
     <mat-expansion-panel-header>
         <mat-panel-title>
@@ -7,22 +7,22 @@
             <p >{{task.dueDate.toLocaleDateString('en-US',{weekday:'short'}) }} - {{ task.dueDate.toLocaleDateString() }}</p></mat-panel-description>       
     </mat-expansion-panel-header>
 
-    <h2 id="title">{{ task.title }}</h2>
+    <h2 class="task_title">{{ task.title }}</h2>
         
-    <div id="task_info">
+    <div class="task_info">
         <h2 id="status" *ngIf="(task.status||[]).length >0">{{ BETA_STATUS_CODES.get(task.status)?.friendly }}</h2>
         <h2 style="color: rgb(57,57,57);" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">|</h2>
         <h2 id="type" *ngIf="((task.category||[]).length > 0 && (task.type||[]).length > 0)">{{ TASK_TYPE_CODES_MAP.get(task.type) + " in " + task.category }}</h2>
     </div>
 
-    <div *ngIf="task.dueDate != undefined" id="task_due">
+    <div *ngIf="task.dueDate != undefined" class="task_due">
         <h2 *ngIf="task.startDate != undefined">Started on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{task.startDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) < 2)">Due on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{ task.dueDate.toLocaleDateString('en-US',{dateStyle:'long'}) }} @ {{ task.dueDate.toLocaleTimeString('en-US',{timeStyle:'short'}) }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 2) && task.completedDate!= undefined">Completed on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{ task.completedDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
         <h2 *ngIf="((BETA_STATUS_CODES.get(task.status)?.precedence || 0) === 3)">Expired on {{task.dueDate.toLocaleDateString('en-US',{weekday:'long'}) }}, {{ task.dueDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
     </div>
 
-    <div    id="task_description" 
+    <div    class="task_description" 
             *ngIf="(task.description||[]).length > 0">
         <mat-divider></mat-divider>
         <p>{{ task.description }}</p>

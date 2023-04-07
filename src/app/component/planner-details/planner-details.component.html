@@ -1,13 +1,13 @@
-<mat-expansion-panel class="planners_stylebody">
+<mat-expansion-panel class="planners">
         
     <mat-expansion-panel-header><h1>{{ planner.name }}</h1></mat-expansion-panel-header>
     
-    <h2 class="planner_goal" *ngIf="(planner.goal||[]).length!=0">
+    <h2 class="planner planner_goal" *ngIf="(planner.goal||[]).length!=0">
         Goal: {{ planner.goal }}
     </h2>
 
         
-    <div    class="dates_stylebody"
+    <div    class="planner planner_dates"
             *ngIf="planner.startDate != undefined && planner.finishDate != undefined">
         <h2 class="dates">From {{ planner.startDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
         <h2 class="dates">To {{ planner.finishDate.toLocaleDateString('en-US',{dateStyle:'long'}) }}</h2>
